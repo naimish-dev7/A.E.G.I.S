@@ -421,9 +421,10 @@
             try { recognition.start(); } catch(e) {}
         }
 
-        // --- 5. GEMINI API & ERROR HANDLING ---
+        // --- 5. GEMINI API (UPDATED TO GEMINI-3.8-FLASH) ---
         async function queryGemini(prompt) {
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            // Updated endpoint model to match Google's active requirements
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
             const securityPrompt = `
 You are A.E.G.I.S., an elite AI assistant created exclusively for Naimish.
 RULES:
@@ -436,12 +437,12 @@ RULES:
                 const res = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: `${securityPrompt}\n\nInput: ${prompt}` }] }] })
+                    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: `${securityPrompt}\n\nInput:${prompt}` }] }] })
                 });
                 const data = await res.json();
                 
                 if (data.error) {
-                    return `API Error (${data.error.code}): ${data.error.message}`;
+                    return `API Error (${data.error.code}):${data.error.message}`;
                 }
                 if (data.candidates && data.candidates[0].content) {
                     return data.candidates[0].content.parts[0].text;
@@ -461,7 +462,7 @@ RULES:
             chatHistory.push({ role: 'user', text: prompt });
             localStorage.setItem('AEGIS_CHAT_HISTORY', JSON.stringify(chatHistory));
             renderHistory();
-            input.value = '';
+            input.value = ``;
 
             if (apiKey) {
                 chatHistory.push({ role: 'aegis', text: 'Computing...' });
