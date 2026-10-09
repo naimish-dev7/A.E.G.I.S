@@ -421,7 +421,7 @@
             try { recognition.start(); } catch(e) {}
         }
 
-        // --- 5. GEMINI API & INTEL ---
+        // --- 5. GEMINI API & ERROR HANDLING ---
         async function queryGemini(prompt) {
             const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
             const securityPrompt = `
@@ -432,13 +432,25 @@ RULES:
 3. If Naimish speaks, provide concise, high-tech, elite coding and architectural answers.
             `.trim();
 
-            const res = await fetch(endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: `${securityPrompt}\n\nInput: ${prompt}` }] }] })
-            });
-            const data = await res.json();
-            return data.candidates[0].content.parts[0].text;
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: `${securityPrompt}\n\nInput: ${prompt}` }] }] })
+                });
+                const data = await res.json();
+                
+                if (data.error) {
+                    return `API Error (${data.error.code}): ${data.error.message}`;
+                }
+                if (data.candidates && data.candidates[0].content) {
+                    return data.candidates[0].content.parts[0].text;
+                }
+                return "Received empty neural response.";
+            } catch (err) {
+                console.error(err);
+                return "Network connection failed. Check your connection or API key.";
+            }
         }
 
         async function handleSend() {
@@ -454,18 +466,12 @@ RULES:
             if (apiKey) {
                 chatHistory.push({ role: 'aegis', text: 'Computing...' });
                 renderHistory();
-                try {
-                    const reply = await queryGemini(prompt);
-                    chatHistory.pop();
-                    chatHistory.push({ role: 'aegis', text: reply });
-                    localStorage.setItem('AEGIS_CHAT_HISTORY', JSON.stringify(chatHistory));
-                    renderHistory();
-                    speak(reply);
-                } catch {
-                    chatHistory.pop();
-                    chatHistory.push({ role: 'aegis', text: 'Gateway timeout. Verify your API key in the sidebar menu.' });
-                    renderHistory();
-                }
+                const reply = await queryGemini(prompt);
+                chatHistory.pop();
+                chatHistory.push({ role: 'aegis', text: reply });
+                localStorage.setItem('AEGIS_CHAT_HISTORY', JSON.stringify(chatHistory));
+                renderHistory();
+                speak(reply);
             } else {
                 setTimeout(() => {
                     let fallback = "Access Locked. Open the sidebar menu (⋮) to store your Gemini API key in the Vault.";
