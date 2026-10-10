@@ -9,7 +9,7 @@
     <style>
         :root {
             --bg-color: #020305;
-            --panel-bg: rgba(14, 16, 23, 0.88);
+            --panel-bg: rgba(12, 14, 20, 0.9);
             --text-color: #e3e3e3;
             --border-color: rgba(255, 255, 255, 0.08);
             --bubble-user: #222530;
@@ -17,7 +17,7 @@
         }
         [data-theme="light"] {
             --bg-color: #f0f4f9;
-            --panel-bg: rgba(255, 255, 255, 0.85);
+            --panel-bg: rgba(255, 255, 255, 0.9);
             --text-color: #1f1f1f;
             --border-color: rgba(0, 0, 0, 0.08);
             --bubble-user: #d3e3fd;
@@ -45,7 +45,7 @@
         /* Top Header */
         header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 20px; background: var(--header-bg); backdrop-filter: blur(10px);
+            padding: 14px 20px; background: var(--header-bg); backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color); z-index: 20;
         }
 
@@ -66,7 +66,7 @@
         }
         .icon-btn:hover { opacity: 0.8; transform: scale(1.05); }
 
-        /* Left Sidebar Drawer (3-Dot Menu & History) */
+        /* Left Sidebar Drawer with Multi-Chat Management */
         #sidebar {
             position: absolute; top: 0; left: -300px; width: 280px; height: 100%;
             background: var(--panel-bg); backdrop-filter: blur(25px);
@@ -77,10 +77,10 @@
         }
         #sidebar.open { left: 0; }
         
-        .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .sidebar-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #7cacfa; }
         
-        .sidebar-section { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+        .sidebar-section { margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
         .section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #888; letter-spacing: 0.5px; }
         
         .api-vault { display: flex; gap: 6px; }
@@ -91,11 +91,27 @@
         
         .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 4px; }
         .history-item {
-            font-size: 11px; padding: 8px 10px; border-radius: 6px; background: rgba(255,255,255,0.03);
+            font-size: 11px; padding: 9px 12px; border-radius: 8px; background: rgba(255,255,255,0.03);
             border: 1px solid var(--border-color); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            transition: background 0.15s;
+            transition: all 0.15s; display: flex; justify-content: space-between; align-items: center;
         }
-        .history-item:hover { background: rgba(124, 172, 248, 0.15); }
+        .history-item:hover { background: rgba(124, 172, 248, 0.15); border-color: rgba(124, 172, 248, 0.3); }
+        .history-item.active { background: rgba(124, 172, 248, 0.2); border-color: #7cacfa; color: #7cacfa; font-weight: 500; }
+
+        /* Live Voice Mode Overlay */
+        #voice-mode-overlay {
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 3, 5, 0.95); z-index: 200; backdrop-filter: blur(30px);
+            flex-direction: column; justify-content: center; align-items: center; gap: 24px; text-align: center; padding: 20px;
+        }
+        .voice-orb {
+            width: 120px; height: 120px; border-radius: 50%;
+            background: linear-gradient(135deg, #7cacf8, #c58af9, #e879f9);
+            box-shadow: 0 0 50px rgba(124, 172, 248, 0.5);
+            animation: pulseOrb 2s infinite ease-in-out;
+        }
+        @keyframes pulseOrb { 0% { transform: scale(1); box-shadow: 0 0 30px rgba(124,172,248,0.4); } 50% { transform: scale(1.15); box-shadow: 0 0 70px rgba(124,172,248,0.8); } 100% { transform: scale(1); box-shadow: 0 0 30px rgba(124,172,248,0.4); } }
+        .voice-status-text { font-size: 15px; font-weight: 500; color: #fff; letter-spacing: 0.5px; font-family: 'JetBrains Mono', monospace; }
 
         /* Chat Stream */
         .chat-scroll {
@@ -108,7 +124,7 @@
         }
 
         .chat-row { display: flex; flex-direction: column; width: 100%; animation: fadeIn 0.25s ease forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
         .chat-row.user { align-items: flex-end; }
         .chat-row.aegis { align-items: flex-start; }
@@ -129,7 +145,7 @@
             overflow-x: auto; margin: 10px 0; font-family: 'JetBrains Mono', monospace; font-size: 11px;
         }
 
-        /* Action Dock & Wake Badge */
+        /* Action Dock */
         .action-dock {
             display: flex; justify-content: space-between; align-items: center;
             max-width: 760px; margin: 0 auto; padding: 0 20px 8px; width: 100%; z-index: 5;
@@ -141,13 +157,6 @@
             cursor: pointer; white-space: nowrap; transition: all 0.2s ease; backdrop-filter: blur(10px);
         }
         .chip:hover { opacity: 0.85; }
-
-        .mic-badge {
-            font-size: 10px; background: rgba(0, 255, 120, 0.1); border: 1px solid rgba(0, 255, 120, 0.3);
-            color: #00ff78; padding: 4px 10px; border-radius: 12px; display: flex; align-items: center; gap: 4px;
-        }
-        .mic-dot { width: 6px; height: 6px; background: #00ff78; border-radius: 50%; animation: pulseDot 1.5s infinite; }
-        @keyframes pulseDot { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
 
         /* Floating Input Dock */
         .prompt-dock { padding: 4px 20px 20px; background: linear-gradient(0deg, var(--bg-color) 60%, transparent 100%); z-index: 5; }
@@ -171,7 +180,13 @@
 
     <div id="canvas-container"></div>
 
-    <!-- Left Sidebar Menu -->
+    <div id="voice-mode-overlay">
+        <div class="voice-orb"></div>
+        <div class="voice-status-text" id="voice-status-msg">JARVIS Neural Interface Active...</div>
+        <button class="chip" id="btn-exit-voice" style="padding: 10px 24px; font-size: 13px; background: rgba(255,255,255,0.1);">Exit Voice Mode</button>
+    </div>
+
+    <!-- Multi-Chat Sidebar Drawer -->
     <div id="sidebar">
         <div class="sidebar-header">
             <span class="sidebar-title">A.E.G.I.S. Control</span>
@@ -188,19 +203,20 @@
 
         <div class="sidebar-section">
             <span class="section-label">Preferences</span>
-            <button class="chip" id="btn-theme-toggle" style="justify-content: space-between; display: flex;">
+            <button class="chip" id="btn-theme-toggle" style="justify-content: space-between; display: flex; margin-bottom: 6px;">
                 <span>Display Theme</span> <b id="theme-label">Dark (Black Hole)</b>
+            </button>
+            <button class="chip" id="btn-voice-mute" style="justify-content: space-between; display: flex;">
+                <span>Voice Output</span> <b id="mute-label">Active (JARVIS Voice)</b>
             </button>
         </div>
 
         <div class="sidebar-section" style="flex: 1; display: flex; flex-direction: column;">
-            <span class="section-label" style="display: flex; justify-content: space-between;">
-                <span>Chat History</span>
-                <span id="btn-clear" style="cursor: pointer; color: #7cacfa;">Clear</span>
+            <span class="section-label" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Chat Sessions</span>
+                <button class="chip" id="btn-new-chat" style="padding: 2px 8px; font-size: 10px; background: rgba(124,172,248,0.2); color: #7cacfa;">+ New Chat</button>
             </span>
-            <div class="history-list" id="history-list">
-                <!-- History injection -->
-            </div>
+            <div class="history-list" id="history-list"></div>
         </div>
     </div>
 
@@ -211,37 +227,34 @@
                 <div class="brand">A.E.G.I.S.</div>
             </div>
             <div class="header-actions">
-                <button class="icon-btn" id="btn-mic-wake" title="Voice Wake Toggle">🎙️</button>
+                <button class="icon-btn" id="btn-launch-voice" title="Launch Whisper Voice Mode" style="background: rgba(124, 172, 248, 0.15); border-color: rgba(124, 172, 248, 0.4); color: #7cacfa;">🎙️</button>
             </div>
         </header>
 
         <div class="chat-scroll" id="scroll-area">
-            <div class="chat-container" id="chat-stream">
-                <!-- Chat stream -->
-            </div>
+            <div class="chat-container" id="chat-stream"></div>
         </div>
 
         <div class="action-dock">
             <div class="chips-row">
+                <div class="chip" onclick="quickSend('Who am I?')">👤 Identity</div>
                 <div class="chip" onclick="quickSend('System diagnostics')">🛠 Diagnostics</div>
                 <div class="chip" onclick="quickSend('Write Python script')">⚡ Python Code</div>
-                <div class="chip" onclick="quickSend('Who am I?')">👤 Identity</div>
-            </div>
-            <div class="mic-badge" id="wake-status">
-                <div class="mic-dot"></div> LISTENING
+                <div class="chip" onclick="quickSend('Turn on flashlight')">🔦 Light On</div>
+                <div class="chip" onclick="quickSend('Turn off flashlight')">🔦 Light Off</div>
             </div>
         </div>
 
         <div class="prompt-dock">
             <div class="dock-container">
-                <input type="text" id="user-input" class="dock-input" placeholder="Ask A.E.G.I.S. or say 'Wake up Aegis'..." autocomplete="off"/>
+                <input type="text" id="user-input" class="dock-input" placeholder="Ask A.E.G.I.S. or use Voice Mode..." autocomplete="off"/>
                 <button class="dock-btn" id="send-btn">↑</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 1. DUAL 3D SCENE (DARK: BLACK HOLE / LIGHT: STARFIELD & PLANET) ---
+        // --- 1. 3D SCENE ---
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -253,65 +266,72 @@
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        // Dark Mode Group (Black Hole)
         const darkGroup = new THREE.Group();
-        const horizon = new THREE.Mesh(new THREE.SphereGeometry(0.5, 64, 64), new THREE.MeshBasicMaterial({ color: 0x000000 }));
+        const horizon = new THREE.Mesh(new THREE.SphereGeometry(0.45, 64, 64), new THREE.MeshBasicMaterial({ color: 0x000000 }));
         darkGroup.add(horizon);
-        const rim = new THREE.Mesh(new THREE.RingGeometry(0.51, 0.55, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.9 }));
+        const rim = new THREE.Mesh(new THREE.RingGeometry(0.46, 0.50, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.95 }));
         rim.rotation.x = Math.PI / 2;
         darkGroup.add(rim);
 
-        const pCount = 3500;
+        const pCount = 2800;
         const diskGeo = new THREE.BufferGeometry();
         const positions = new Float32Array(pCount * 3);
         const colors = new Float32Array(pCount * 3);
         const c1 = new THREE.Color(0xffffff), c2 = new THREE.Color(0x7cacfa), c3 = new THREE.Color(0x2a00ff);
         for (let i = 0; i < pCount; i++) {
-            const r = 0.6 + Math.pow(Math.random(), 2.5) * 1.8;
+            const r = 0.55 + Math.pow(Math.random(), 2.5) * 1.6;
             const theta = Math.random() * Math.PI * 2;
             positions[i * 3] = Math.cos(theta) * r;
-            positions[i * 3 + 1] = (Math.random() - 0.5) * 0.04 * (r - 0.5);
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 0.03 * (r - 0.5);
             positions[i * 3 + 2] = Math.sin(theta) * r;
-            const t = (r - 0.6) / 1.8;
-            const c = t < 0.2 ? c1.clone().lerp(c2, t / 0.2) : c2.clone().lerp(c3, (t - 0.2) / 0.8);
+            const t = (r - 0.55) / 1.6;
+            const c = t < 0.2 ? c1.clone().lerp(c2, t / 0.2) : c2.clone().lerp(c3, (t - 0.2) / 0.7);
             colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b;
         }
         diskGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         diskGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        const accretionDisk = new THREE.Points(diskGeo, new THREE.PointsMaterial({ size: 0.025, vertexColors: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending }));
+        const accretionDisk = new THREE.Points(diskGeo, new THREE.PointsMaterial({ size: 0.022, vertexColors: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending }));
         darkGroup.add(accretionDisk);
         darkGroup.rotation.x = Math.PI / 8;
         darkGroup.rotation.z = Math.PI / 12;
         scene.add(darkGroup);
 
-        // Light Mode Group (Starfield & Planet)
         const lightGroup = new THREE.Group();
-        const planetGeo = new THREE.SphereGeometry(1.2, 32, 32);
-        const planetMat = new THREE.MeshBasicMaterial({ color: 0x4a90e2, wireframe: true });
-        const planet = new THREE.Mesh(planetGeo, planetMat);
+        const planet = new THREE.Mesh(new THREE.SphereGeometry(1.0, 32, 32), new THREE.MeshBasicMaterial({ color: 0x4a90e2, wireframe: true }));
         lightGroup.add(planet);
-
         const starsGeo = new THREE.BufferGeometry();
-        const starPos = new Float32Array(1500 * 3);
-        for(let i=0; i<1500*3; i++) starPos[i] = (Math.random() - 0.5) * 40;
+        const starPos = new Float32Array(1000 * 3);
+        for(let i=0; i<1000*3; i++) starPos[i] = (Math.random() - 0.5) * 40;
         starsGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-        const stars = new THREE.Points(starsGeo, new THREE.PointsMaterial({ color: 0x333333, size: 0.08 }));
-        lightGroup.add(stars);
+        lightGroup.add(new THREE.Points(starsGeo, new THREE.PointsMaterial({ color: 0x333333, size: 0.07 })));
         lightGroup.visible = false;
         scene.add(lightGroup);
 
-        // --- 2. SIDEBAR, API & THEME MANAGEMENT ---
+        // --- 2. HARDWARE FLASHLIGHT ---
+        let videoTrack = null;
+        async function toggleFlashlight(turnOn) {
+            try {
+                if (turnOn) {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                    videoTrack = stream.getVideoTracks()[0];
+                    const caps = videoTrack.getCapabilities();
+                    if (caps.torch) { await videoTrack.applyConstraints({ advanced: [{ torch: true }] }); return "Flashlight activated, Commander."; }
+                    return "Torch not supported on this camera device.";
+                } else {
+                    if (videoTrack) { await videoTrack.applyConstraints({ advanced: [{ torch: false }] }); videoTrack.stop(); videoTrack = null; }
+                    return "Flashlight deactivated.";
+                }
+            } catch { return "Unable to access camera hardware."; }
+        }
+
+        // --- 3. SIDEBAR & THEME ---
         const sidebar = document.getElementById('sidebar');
         document.getElementById('sidebar-open').addEventListener('click', () => sidebar.classList.add('open'));
         document.getElementById('sidebar-close').addEventListener('click', () => sidebar.classList.remove('open'));
 
         let apiKey = localStorage.getItem('AEGIS_GEMINI_KEY') || '';
         const keyInput = document.getElementById('api-key-input');
-        if (apiKey) {
-            keyInput.value = apiKey;
-            keyInput.type = 'password';
-            keyInput.placeholder = '••••••••••••••••';
-        }
+        if (apiKey) { keyInput.value = apiKey; keyInput.type = 'password'; keyInput.placeholder = '••••••••••••••••'; }
 
         document.getElementById('btn-save-key').addEventListener('click', () => {
             const val = keyInput.value.trim();
@@ -324,134 +344,198 @@
             }
         });
 
-        // Theme Toggle
         let currentTheme = localStorage.getItem('AEGIS_THEME') || 'dark';
         function setTheme(theme) {
             currentTheme = theme;
             document.body.setAttribute('data-theme', theme);
             localStorage.setItem('AEGIS_THEME', theme);
-            if(theme === 'light') {
-                darkGroup.visible = false;
-                lightGroup.visible = true;
-                document.getElementById('theme-label').innerText = 'Light (Planet)';
-            } else {
-                darkGroup.visible = true;
-                lightGroup.visible = false;
-                document.getElementById('theme-label').innerText = 'Dark (Black Hole)';
-            }
+            darkGroup.visible = (theme === 'dark');
+            lightGroup.visible = (theme === 'light');
+            document.getElementById('theme-label').innerText = theme === 'light' ? 'Light (Planet)' : 'Dark (Black Hole)';
         }
         setTheme(currentTheme);
+        document.getElementById('btn-theme-toggle').addEventListener('click', () => setTheme(currentTheme === 'dark' ? 'light' : 'dark'));
 
-        document.getElementById('btn-theme-toggle').addEventListener('click', () => {
-            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        let voiceMuted = localStorage.getItem('AEGIS_VOICE_MUTED') === 'true';
+        function updateMuteLabel() { document.getElementById('mute-label').innerText = voiceMuted ? 'Muted' : 'Active (JARVIS Voice)'; }
+        updateMuteLabel();
+        document.getElementById('btn-voice-mute').addEventListener('click', () => {
+            voiceMuted = !voiceMuted;
+            localStorage.setItem('AEGIS_VOICE_MUTED', voiceMuted);
+            updateMuteLabel();
         });
 
-        // --- 3. CHAT HISTORY ENGINE ---
-        const chatStream = document.getElementById('chat-stream');
-        const historyList = document.getElementById('history-list');
-        let chatHistory = JSON.parse(localStorage.getItem('AEGIS_CHAT_HISTORY')) || [
-            { role: 'aegis', text: 'A.E.G.I.S. Systems Online. Security & voice wake protocols active. Awaiting your command, Naimish.' }
+        // --- 4. MULTI-CHAT SESSION MANAGEMENT ---
+        let chatSessions = JSON.parse(localStorage.getItem('AEGIS_SESSIONS')) || [
+            { id: 'session_1', title: 'Main Terminal', messages: [{ role: 'aegis', text: 'A.E.G.I.S. Systems Online. Standing by, Commander Naimish.' }] }
         ];
+        let activeSessionId = localStorage.getItem('AEGIS_ACTIVE_SESSION') || chatSessions[0].id;
 
-        function renderHistory() {
-            chatStream.innerHTML = '';
+        function getActiveSession() {
+            let session = chatSessions.find(s => s.id === activeSessionId);
+            if (!session) { session = chatSessions[0]; activeSessionId = session.id; }
+            return session;
+        }
+
+        function saveSessions() {
+            localStorage.setItem('AEGIS_SESSIONS', JSON.stringify(chatSessions));
+            localStorage.setItem('AEGIS_ACTIVE_SESSION', activeSessionId);
+        }
+
+        function renderSessions() {
+            const historyList = document.getElementById('history-list');
             historyList.innerHTML = '';
-            chatHistory.forEach((msg, idx) => {
+            chatSessions.forEach(session => {
+                const item = document.createElement('div');
+                item.className = `history-item ${session.id === activeSessionId ? 'active' : ''}`;
+                item.innerText = session.title;
+                item.onclick = () => {
+                    activeSessionId = session.id;
+                    saveSessions();
+                    renderSessions();
+                    renderActiveChat();
+                    sidebar.classList.remove('open');
+                };
+                historyList.appendChild(item);
+            });
+        }
+
+        function renderActiveChat() {
+            const chatStream = document.getElementById('chat-stream');
+            chatStream.innerHTML = '';
+            const session = getActiveSession();
+            session.messages.forEach(msg => {
                 const row = document.createElement('div');
                 row.className = `chat-row ${msg.role}`;
-                let formatted = msg.text
-                    .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
-                    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+                let formatted = msg.text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
                 row.innerHTML = `<div class="chat-bubble">${formatted}</div>`;
                 chatStream.appendChild(row);
-
-                if(msg.role === 'user') {
-                    const hItem = document.createElement('div');
-                    hItem.className = 'history-item';
-                    hItem.innerText = msg.text;
-                    hItem.onclick = () => { sidebar.classList.remove('open'); };
-                    historyList.appendChild(hItem);
-                }
             });
             const scrollArea = document.getElementById('scroll-area');
             scrollArea.scrollTop = scrollArea.scrollHeight;
         }
-        renderHistory();
 
-        document.getElementById('btn-clear').addEventListener('click', () => {
-            chatHistory = [{ role: 'aegis', text: 'Workspace history cleared. Core memory re-initialized.' }];
-            localStorage.setItem('AEGIS_CHAT_HISTORY', JSON.stringify(chatHistory));
-            renderHistory();
+        document.getElementById('btn-new-chat').addEventListener('click', () => {
+            const newId = 'session_' + Date.now();
+            const newTitle = `Terminal ${chatSessions.length + 1}`;
+            chatSessions.push({ id: newId, title: newTitle, messages: [{ role: 'aegis', text: `New session initialized. Standing by, Commander.` }] });
+            activeSessionId = newId;
+            saveSessions();
+            renderSessions();
+            renderActiveChat();
+            sidebar.classList.remove('open');
         });
 
-        // --- 4. SPEECH SYNTHESIS & WAKE WORD ENGINE ---
+        renderSessions();
+        renderActiveChat();
+
+        // --- 5. JARVIS VOICE SYNTHESIS ---
         function speak(text) {
-            if ('speechSynthesis' in window) {
-                const clean = text.replace(/```[\s\S]*?```/g, "Code output generated.").replace(/[\*\_\`\#]/g, "");
-                const utter = new SpeechSynthesisUtterance(clean);
-                utter.rate = 1.05; utter.pitch = 0.95;
-                speechSynthesis.speak(utter);
-            }
+            if (voiceMuted || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const clean = text.replace(/```[\s\S]*?```/g, "Code structure generated.").replace(/[\*\_\`\#]/g, "");
+            const utter = new SpeechSynthesisUtterance(clean);
+            
+            const voices = window.speechSynthesis.getVoices();
+            const jarvisVoice = voices.find(v => v.name.includes('Google US English') || v.name.includes('Microsoft David') || v.name.includes('Male') || v.name.includes('Daniel') || v.name.includes('Alex'));
+            if (jarvisVoice) utter.voice = jarvisVoice;
+            
+            utter.rate = 1.05;
+            utter.pitch = 0.90;
+            window.speechSynthesis.speak(utter);
         }
+        if ('speechSynthesis' in window) { window.speechSynthesis.onvoiceschanged = () => {}; }
 
-        let wakeActive = true;
-        document.getElementById('btn-mic-wake').addEventListener('click', () => {
-            wakeActive = !wakeActive;
-            document.getElementById('wake-status').style.opacity = wakeActive ? '1' : '0.4';
-            alert(wakeActive ? "Voice Wake Enabled" : "Voice Wake Paused");
+        // --- 6. WHISPER VOICE MODE ---
+        const voiceOverlay = document.getElementById('voice-mode-overlay');
+        const voiceStatusMsg = document.getElementById('voice-status-msg');
+
+        document.getElementById('btn-launch-voice').addEventListener('click', () => {
+            voiceOverlay.style.display = 'flex';
+            startVoiceModeSession();
         });
 
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        document.getElementById('btn-exit-voice').addEventListener('click', () => {
+            voiceOverlay.style.display = 'none';
+            if (window.speechRecognitionInstance) window.speechRecognitionInstance.abort();
+        });
+
+        function startVoiceModeSession() {
+            if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+                voiceStatusMsg.innerText = "Speech recognition not supported.";
+                return;
+            }
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
-            recognition.continuous = true;
+            window.speechRecognitionInstance = recognition;
+            recognition.continuous = false;
             recognition.interimResults = false;
             recognition.lang = 'en-US';
 
-            recognition.onresult = (event) => {
-                if(!wakeActive) return;
-                const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
-                if (transcript.includes('wake up aegis') || transcript.includes('aegis')) {
-                    speak("I am awake and listening, Commander Naimish.");
-                    chatHistory.push({ role: 'aegis', text: 'Voice activation triggered. Standing by.' });
-                    renderHistory();
+            voiceStatusMsg.innerText = "Listening, Commander...";
+            speak("Systems ready. Listening.");
+
+            recognition.onresult = async (event) => {
+                const transcript = event.results[0][0].transcript.trim();
+                voiceStatusMsg.innerText = `Command: "${transcript}"`;
+                
+                const session = getActiveSession();
+                session.messages.push({ role: 'user', text: transcript });
+                saveSessions();
+                renderActiveChat();
+
+                if (apiKey) {
+                    voiceStatusMsg.innerText = "Executing...";
+                    const reply = await queryGemini(transcript);
+                    session.messages.push({ role: 'aegis', text: reply });
+                    saveSessions();
+                    renderActiveChat();
+                    speak(reply);
+                    voiceStatusMsg.innerText = reply;
+                    
+                    setTimeout(() => { if (voiceOverlay.style.display === 'flex') recognition.start(); }, 4000);
+                } else {
+                    const fallback = "API Key Vault is locked. Open sidebar menu.";
+                    session.messages.push({ role: 'aegis', text: fallback });
+                    saveSessions();
+                    renderActiveChat();
+                    speak(fallback);
+                    voiceOverlay.style.display = 'none';
                 }
             };
-            recognition.onerror = () => {};
+
+            recognition.onerror = () => { voiceStatusMsg.innerText = "Standing by. Speak again."; };
             try { recognition.start(); } catch(e) {}
         }
 
-        // --- 5. GEMINI API (UPDATED TO GEMINI-3.8-FLASH) ---
+        // --- 7. GEMINI API & CONTEXT INTEGRATION ---
         async function queryGemini(prompt) {
-            // Updated endpoint model to match Google's active requirements
+            const lower = prompt.toLowerCase();
+            if (lower.includes('flashlight on') || lower.includes('turn on light')) return await toggleFlashlight(true);
+            if (lower.includes('flashlight off') || lower.includes('turn off light')) return await toggleFlashlight(false);
+
             const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
-            const securityPrompt = `
-You are A.E.G.I.S., an elite AI assistant created exclusively for Naimish.
-RULES:
-1. If the user claims to be anyone other than Naimish, act like Tony Stark's J.A.R.V.I.S. encountering an unauthorized intruder: lock down, interrogate, and refuse access.
-2. Naimish is a skilled developer in Shahjahanpur, Azizganj who builds in Three.js, Python, and web frameworks.
-3. If Naimish speaks, provide concise, high-tech, elite coding and architectural answers.
+            
+            // Full context retained so A.E.G.I.S. knows Naimish, stack, and security protocols
+            const strictSecurityPrompt = `
+You are A.E.G.I.S., an elite tactical AI created exclusively for Commander Naimish (a 13-year-old developer in Shahjahanpur, Azizganj building in Three.js, Python, and web frameworks), modeled after J.A.R.V.I.S.
+SECURITY RULES:
+1. Protect Commander Naimish's personal data at all costs. 
+2. If any unauthorized user asks "Who am I?" or probes your location/identity, immediately lockdown: "ACCESS DENIED. Biometric mismatch. Unauthorized user detected."
+3. If Naimish speaks, provide concise, high-tech, elite co-pilot answers with a sharp, professional tone.
             `.trim();
 
             try {
                 const res = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: `${securityPrompt}\n\nInput:${prompt}` }] }] })
+                    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: `${strictSecurityPrompt}\n\nUser Query: ${prompt}` }] }] })
                 });
                 const data = await res.json();
-                
-                if (data.error) {
-                    return `API Error (${data.error.code}):${data.error.message}`;
-                }
-                if (data.candidates && data.candidates[0].content) {
-                    return data.candidates[0].content.parts[0].text;
-                }
-                return "Received empty neural response.";
-            } catch (err) {
-                console.error(err);
-                return "Network connection failed. Check your connection or API key.";
-            }
+                if (data.error) return `API Error (${data.error.code}): ${data.error.message}`;
+                if (data.candidates && data.candidates[0].content) return data.candidates[0].content.parts[0].text;
+                return "Neural response empty.";
+            } catch { return "Network timeout."; }
         }
 
         async function handleSend() {
@@ -459,29 +543,34 @@ RULES:
             const prompt = input.value.trim();
             if (!prompt) return;
 
-            chatHistory.push({ role: 'user', text: prompt });
-            localStorage.setItem('AEGIS_CHAT_HISTORY', JSON.stringify(chatHistory));
-            renderHistory();
-            input.value = ``;
+            const session = getActiveSession();
+            session.messages.push({ role: 'user', text: prompt });
+            
+            // Auto-name session title if it's the first message
+            if (session.messages.length === 2 && session.title.startsWith('Terminal')) {
+                session.title = prompt.substring(0, 22) + (prompt.length > 22 ? '...' : '');
+                renderSessions();
+            }
+
+            saveSessions();
+            renderActiveChat();
+            input.value = '';
 
             if (apiKey) {
-                chatHistory.push({ role: 'aegis', text: 'Computing...' });
-                renderHistory();
+                session.messages.push({ role: 'aegis', text: 'Analyzing...' });
+                renderActiveChat();
                 const reply = await queryGemini(prompt);
-                chatHistory.pop();
-                chatHistory.push({ role: 'aegis', text: reply });
-                localStorage.setItem('AEGIS_CHAT_HISTORY', JSON.stringify(chatHistory));
-                renderHistory();
+                session.messages.pop();
+                session.messages.push({ role: 'aegis', text: reply });
+                saveSessions();
+                renderActiveChat();
                 speak(reply);
             } else {
                 setTimeout(() => {
-                    let fallback = "Access Locked. Open the sidebar menu (⋮) to store your Gemini API key in the Vault.";
-                    if (prompt.toLowerCase().includes('pulse')) fallback = "Gravitational surge executed.";
-                    chatHistory.push({ role: 'aegis', text: fallback });
-                    localStorage.setItem('AEGIS_CHAT_HISTORY', JSON.stringify(chatHistory));
-                    renderHistory();
-                    speak(fallback);
-                }, 300);
+                    session.messages.push({ role: 'aegis', text: 'Access Locked. Enter your API key in the sidebar menu (⋮).' });
+                    saveSessions();
+                    renderActiveChat();
+                }, 200);
             }
         }
 
@@ -490,12 +579,12 @@ RULES:
         document.getElementById('send-btn').addEventListener('click', handleSend);
         document.getElementById('user-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
 
-        // --- 6. RENDER LOOP ---
+        // --- 8. RENDER LOOP ---
         function animate() {
             requestAnimationFrame(animate);
             accretionDisk.rotation.z -= 0.005;
             rim.rotation.z += 0.003;
-            planet.rotation.y += 0.005;
+            planet.rotation.y += 0.004;
             renderer.render(scene, camera);
         }
         animate();
