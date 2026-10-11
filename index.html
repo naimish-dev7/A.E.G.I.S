@@ -9,7 +9,7 @@
     <style>
         :root {
             --bg-color: #020305;
-            --panel-bg: rgba(12, 14, 20, 0.9);
+            --panel-bg: rgba(12, 14, 20, 0.92);
             --text-color: #e3e3e3;
             --border-color: rgba(255, 255, 255, 0.08);
             --bubble-user: #222530;
@@ -17,11 +17,27 @@
         }
         [data-theme="light"] {
             --bg-color: #f0f4f9;
-            --panel-bg: rgba(255, 255, 255, 0.9);
+            --panel-bg: rgba(255, 255, 255, 0.92);
             --text-color: #1f1f1f;
             --border-color: rgba(0, 0, 0, 0.08);
             --bubble-user: #d3e3fd;
             --header-bg: rgba(240, 244, 249, 0.85);
+        }
+        [data-theme="chill"] {
+            --bg-color: #1a0f2e;
+            --panel-bg: rgba(45, 27, 78, 0.9);
+            --text-color: #ffd166;
+            --border-color: rgba(255, 209, 102, 0.2);
+            --bubble-user: #4a2574;
+            --header-bg: rgba(26, 15, 46, 0.85);
+        }
+        [data-theme="serious"] {
+            --bg-color: #020704;
+            --panel-bg: rgba(4, 18, 10, 0.94);
+            --text-color: #00ff78;
+            --border-color: rgba(0, 255, 120, 0.3);
+            --bubble-user: #082614;
+            --header-bg: rgba(2, 7, 4, 0.85);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,7 +45,7 @@
             width: 100%; height: 100%; overflow: hidden;
             background: var(--bg-color); color: var(--text-color);
             font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            transition: background 0.3s ease, color 0.3s ease;
+            transition: background 0.4s ease, color 0.4s ease;
         }
 
         #canvas-container {
@@ -37,12 +53,17 @@
             top: 0; left: 0; z-index: 1; pointer-events: none;
         }
 
+        #meme-bg {
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1000&auto=format&fit=crop') center/cover no-repeat;
+            opacity: 0.25; z-index: 1; pointer-events: none; filter: hue-rotate(45deg);
+        }
+
         .app-shell {
             position: absolute; z-index: 10; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: space-between;
         }
 
-        /* Top Header */
         header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 20px; background: var(--header-bg); backdrop-filter: blur(12px);
@@ -66,9 +87,9 @@
         }
         .icon-btn:hover { opacity: 0.8; transform: scale(1.05); }
 
-        /* Left Sidebar Drawer with Multi-Chat Management */
+        /* Left Sidebar Drawer (Chat Management, Vault, Modes) */
         #sidebar {
-            position: absolute; top: 0; left: -300px; width: 280px; height: 100%;
+            position: absolute; top: 0; left: -320px; width: 300px; height: 100%;
             background: var(--panel-bg); backdrop-filter: blur(25px);
             border-right: 1px solid var(--border-color); z-index: 100;
             display: flex; flex-direction: column; padding: 20px;
@@ -78,7 +99,7 @@
         #sidebar.open { left: 0; }
         
         .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .sidebar-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #7cacfa; }
+        .sidebar-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-color); }
         
         .sidebar-section { margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
         .section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #888; letter-spacing: 0.5px; }
@@ -91,14 +112,18 @@
         
         .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 4px; }
         .history-item {
-            font-size: 11px; padding: 9px 12px; border-radius: 8px; background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border-color); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            transition: all 0.15s; display: flex; justify-content: space-between; align-items: center;
+            font-size: 11.5px; padding: 9px 12px; border-radius: 8px; background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color); cursor: pointer; transition: all 0.15s;
+            display: flex; justify-content: space-between; align-items: center; gap: 6px;
         }
         .history-item:hover { background: rgba(124, 172, 248, 0.15); border-color: rgba(124, 172, 248, 0.3); }
-        .history-item.active { background: rgba(124, 172, 248, 0.2); border-color: #7cacfa; color: #7cacfa; font-weight: 500; }
+        .history-item.active { background: rgba(124, 172, 248, 0.2); border-color: var(--text-color); font-weight: 500; }
+        
+        .history-title-text { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .history-actions { display: flex; gap: 4px; }
+        .session-action-btn { background: transparent; border: none; color: var(--text-color); cursor: pointer; font-size: 11px; opacity: 0.6; padding: 2px; }
+        .session-action-btn:hover { opacity: 1; color: #7cacfa; }
 
-        /* Live Voice Mode Overlay */
         #voice-mode-overlay {
             display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(2, 3, 5, 0.95); z-index: 200; backdrop-filter: blur(30px);
@@ -110,10 +135,9 @@
             box-shadow: 0 0 50px rgba(124, 172, 248, 0.5);
             animation: pulseOrb 2s infinite ease-in-out;
         }
-        @keyframes pulseOrb { 0% { transform: scale(1); box-shadow: 0 0 30px rgba(124,172,248,0.4); } 50% { transform: scale(1.15); box-shadow: 0 0 70px rgba(124,172,248,0.8); } 100% { transform: scale(1); box-shadow: 0 0 30px rgba(124,172,248,0.4); } }
+        @keyframes pulseOrb { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
         .voice-status-text { font-size: 15px; font-weight: 500; color: #fff; letter-spacing: 0.5px; font-family: 'JetBrains Mono', monospace; }
 
-        /* Chat Stream */
         .chat-scroll {
             flex: 1; overflow-y: auto; padding: 16px 20px;
             display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; z-index: 5;
@@ -123,7 +147,7 @@
             display: flex; flex-direction: column; gap: 18px;
         }
 
-        .chat-row { display: flex; flex-direction: column; width: 100%; animation: fadeIn 0.25s ease forwards; }
+        .chat-row { display: flex; flex-direction: column; width: 100%; animation: fadeIn 0.2s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
         .chat-row.user { align-items: flex-end; }
@@ -139,13 +163,14 @@
             border: 1px solid var(--border-color); border-bottom-left-radius: 4px; backdrop-filter: blur(15px);
         }
 
+        .chat-img-preview { max-width: 200px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border-color); }
+
         pre {
-            background: #08090d; border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #08090d; border: 1px solid var(--border-color);
             padding: 12px; border-radius: 8px; color: #8cb4ff;
             overflow-x: auto; margin: 10px 0; font-family: 'JetBrains Mono', monospace; font-size: 11px;
         }
 
-        /* Action Dock */
         .action-dock {
             display: flex; justify-content: space-between; align-items: center;
             max-width: 760px; margin: 0 auto; padding: 0 20px 8px; width: 100%; z-index: 5;
@@ -158,17 +183,20 @@
         }
         .chip:hover { opacity: 0.85; }
 
-        /* Floating Input Dock */
         .prompt-dock { padding: 4px 20px 20px; background: linear-gradient(0deg, var(--bg-color) 60%, transparent 100%); z-index: 5; }
         .dock-container {
             width: 100%; max-width: 760px; margin: 0 auto;
             background: var(--panel-bg); border: 1px solid var(--border-color);
-            border-radius: 28px; padding: 6px 8px 6px 16px; display: flex; align-items: center;
+            border-radius: 28px; padding: 6px 8px 6px 12px; display: flex; align-items: center; gap: 8px;
             backdrop-filter: blur(20px); box-shadow: 0 8px 30px rgba(0,0,0,0.2);
         }
         .dock-container:focus-within { border-color: rgba(197, 138, 249, 0.5); }
 
         .dock-input { flex: 1; background: transparent; border: none; color: var(--text-color); font-size: 13.5px; outline: none; }
+        
+        #file-upload-btn { background: transparent; border: none; cursor: pointer; color: var(--text-color); font-size: 16px; padding: 4px; }
+        #file-input { display: none; }
+
         .dock-btn {
             background: linear-gradient(135deg, #7cacf8, #c58af9); border: none;
             width: 36px; height: 36px; border-radius: 50%; color: #020305;
@@ -179,6 +207,7 @@
 <body data-theme="dark">
 
     <div id="canvas-container"></div>
+    <div id="meme-bg"></div>
 
     <div id="voice-mode-overlay">
         <div class="voice-orb"></div>
@@ -186,7 +215,6 @@
         <button class="chip" id="btn-exit-voice" style="padding: 10px 24px; font-size: 13px; background: rgba(255,255,255,0.1);">Exit Voice Mode</button>
     </div>
 
-    <!-- Multi-Chat Sidebar Drawer -->
     <div id="sidebar">
         <div class="sidebar-header">
             <span class="sidebar-title">A.E.G.I.S. Control</span>
@@ -202,9 +230,9 @@
         </div>
 
         <div class="sidebar-section">
-            <span class="section-label">Preferences</span>
-            <button class="chip" id="btn-theme-toggle" style="justify-content: space-between; display: flex; margin-bottom: 6px;">
-                <span>Display Theme</span> <b id="theme-label">Dark (Black Hole)</b>
+            <span class="section-label">System Mode (4 Modes)</span>
+            <button class="chip" id="btn-mode-toggle" style="justify-content: space-between; display: flex; margin-bottom: 6px;">
+                <span>Active Mode</span> <b id="mode-label">Dark (Black Hole)</b>
             </button>
             <button class="chip" id="btn-voice-mute" style="justify-content: space-between; display: flex;">
                 <span>Voice Output</span> <b id="mute-label">Active (JARVIS Voice)</b>
@@ -213,8 +241,8 @@
 
         <div class="sidebar-section" style="flex: 1; display: flex; flex-direction: column;">
             <span class="section-label" style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Chat Sessions</span>
-                <button class="chip" id="btn-new-chat" style="padding: 2px 8px; font-size: 10px; background: rgba(124,172,248,0.2); color: #7cacfa;">+ New Chat</button>
+                <span>Chat Sessions (Pin / Rename / Delete)</span>
+                <button class="chip" id="btn-new-chat" style="padding: 2px 8px; font-size: 10px; background: rgba(124,172,248,0.2); color: #7cacfa;">+ New</button>
             </span>
             <div class="history-list" id="history-list"></div>
         </div>
@@ -227,7 +255,7 @@
                 <div class="brand">A.E.G.I.S.</div>
             </div>
             <div class="header-actions">
-                <button class="icon-btn" id="btn-launch-voice" title="Launch Whisper Voice Mode" style="background: rgba(124, 172, 248, 0.15); border-color: rgba(124, 172, 248, 0.4); color: #7cacfa;">🎙️</button>
+                <button class="icon-btn" id="btn-launch-voice" title="Launch Voice Mode" style="background: rgba(124, 172, 248, 0.15); border-color: rgba(124, 172, 248, 0.4); color: #7cacfa;">🎙️</button>
             </div>
         </header>
 
@@ -239,7 +267,7 @@
             <div class="chips-row">
                 <div class="chip" onclick="quickSend('Who am I?')">👤 Identity</div>
                 <div class="chip" onclick="quickSend('System diagnostics')">🛠 Diagnostics</div>
-                <div class="chip" onclick="quickSend('Write Python script')">⚡ Python Code</div>
+                <div class="chip" onclick="quickSend('Open Google search for three.js')">🌐 Search Web</div>
                 <div class="chip" onclick="quickSend('Turn on flashlight')">🔦 Light On</div>
                 <div class="chip" onclick="quickSend('Turn off flashlight')">🔦 Light Off</div>
             </div>
@@ -247,14 +275,17 @@
 
         <div class="prompt-dock">
             <div class="dock-container">
-                <input type="text" id="user-input" class="dock-input" placeholder="Ask A.E.G.I.S. or use Voice Mode..." autocomplete="off"/>
+                <input type="file" id="file-input" accept="image/*" />
+                <button id="file-upload-btn" title="Upload Reference Image">📎</button>
+                
+                <input type="text" id="user-input" class="dock-input" placeholder="Ask A.E.G.I.S. or attach photo..." autocomplete="off"/>
                 <button class="dock-btn" id="send-btn">↑</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 1. 3D SCENE ---
+        // --- 1. 3D SCENE (Tactical Mixer) ---
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -294,6 +325,13 @@
         darkGroup.add(accretionDisk);
         darkGroup.rotation.x = Math.PI / 8;
         darkGroup.rotation.z = Math.PI / 12;
+
+        const tacStarsGeo = new THREE.BufferGeometry();
+        const tacPos = new Float32Array(2000 * 3);
+        for(let i=0; i<2000*3; i++) tacPos[i] = (Math.random() - 0.5) * 50;
+        tacStarsGeo.setAttribute('position', new THREE.BufferAttribute(tacPos, 3));
+        const tacticalStars = new THREE.Points(tacStarsGeo, new THREE.PointsMaterial({ color: 0x00ff78, size: 0.06, transparent: true, opacity: 0.5 }));
+        darkGroup.add(tacticalStars);
         scene.add(darkGroup);
 
         const lightGroup = new THREE.Group();
@@ -307,24 +345,32 @@
         lightGroup.visible = false;
         scene.add(lightGroup);
 
-        // --- 2. HARDWARE FLASHLIGHT ---
+        // --- 2. BROWSER AUTOMATION & HARDWARE TASKS ---
         let videoTrack = null;
-        async function toggleFlashlight(turnOn) {
-            try {
-                if (turnOn) {
+        async function executeTask(prompt) {
+            const lower = prompt.toLowerCase();
+            if (lower.includes('flashlight on') || lower.includes('turn on light')) {
+                try {
                     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
                     videoTrack = stream.getVideoTracks()[0];
                     const caps = videoTrack.getCapabilities();
                     if (caps.torch) { await videoTrack.applyConstraints({ advanced: [{ torch: true }] }); return "Flashlight activated, Commander."; }
-                    return "Torch not supported on this camera device.";
-                } else {
-                    if (videoTrack) { await videoTrack.applyConstraints({ advanced: [{ torch: false }] }); videoTrack.stop(); videoTrack = null; }
-                    return "Flashlight deactivated.";
-                }
-            } catch { return "Unable to access camera hardware."; }
+                    return "Torch not supported on this device camera.";
+                } catch { return "Unable to access camera hardware."; }
+            }
+            if (lower.includes('flashlight off') || lower.includes('turn off light')) {
+                if (videoTrack) { await videoTrack.applyConstraints({ advanced: [{ torch: false }] }); videoTrack.stop(); videoTrack = null; }
+                return "Flashlight deactivated.";
+            }
+            if (lower.includes('open google') || lower.includes('search web')) {
+                const query = prompt.replace(/open google search for|search web for|open google/gi, '').trim() || 'A.E.G.I.S. AI';
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+                return `Initiating Brave browser navigation: Searching Google for "${query}".`;
+            }
+            return null;
         }
 
-        // --- 3. SIDEBAR & THEME ---
+        // --- 3. SIDEBAR & 4 MODES ---
         const sidebar = document.getElementById('sidebar');
         document.getElementById('sidebar-open').addEventListener('click', () => sidebar.classList.add('open'));
         document.getElementById('sidebar-close').addEventListener('click', () => sidebar.classList.remove('open'));
@@ -344,17 +390,27 @@
             }
         });
 
-        let currentTheme = localStorage.getItem('AEGIS_THEME') || 'dark';
-        function setTheme(theme) {
-            currentTheme = theme;
-            document.body.setAttribute('data-theme', theme);
-            localStorage.setItem('AEGIS_THEME', theme);
-            darkGroup.visible = (theme === 'dark');
-            lightGroup.visible = (theme === 'light');
-            document.getElementById('theme-label').innerText = theme === 'light' ? 'Light (Planet)' : 'Dark (Black Hole)';
+        const modes = ['dark', 'light', 'chill', 'serious'];
+        const modeLabels = { dark: 'Dark (Black Hole)', light: 'Light (Planet)', chill: 'Chill (Meme Vibe)', serious: 'Serious (Tactical Matrix)' };
+        let currentMode = localStorage.getItem('AEGIS_MODE') || 'dark';
+
+        function setSystemMode(mode) {
+            currentMode = mode;
+            document.body.setAttribute('data-theme', mode);
+            localStorage.setItem('AEGIS_MODE', mode);
+            document.getElementById('mode-label').innerText = modeLabels[mode];
+
+            darkGroup.visible = (mode === 'dark' || mode === 'serious');
+            lightGroup.visible = (mode === 'light');
+            document.getElementById('meme-bg').style.display = (mode === 'chill') ? 'block' : 'none';
+            tacticalStars.visible = (mode === 'serious');
         }
-        setTheme(currentTheme);
-        document.getElementById('btn-theme-toggle').addEventListener('click', () => setTheme(currentTheme === 'dark' ? 'light' : 'dark'));
+        setSystemMode(currentMode);
+
+        document.getElementById('btn-mode-toggle').addEventListener('click', () => {
+            let nextIdx = (modes.indexOf(currentMode) + 1) % modes.length;
+            setSystemMode(modes[nextIdx]);
+        });
 
         let voiceMuted = localStorage.getItem('AEGIS_VOICE_MUTED') === 'true';
         function updateMuteLabel() { document.getElementById('mute-label').innerText = voiceMuted ? 'Muted' : 'Active (JARVIS Voice)'; }
@@ -365,11 +421,28 @@
             updateMuteLabel();
         });
 
-        // --- 4. MULTI-CHAT SESSION MANAGEMENT ---
+        // --- 4. ADVANCED CHAT MANAGEMENT ---
         let chatSessions = JSON.parse(localStorage.getItem('AEGIS_SESSIONS')) || [
-            { id: 'session_1', title: 'Main Terminal', messages: [{ role: 'aegis', text: 'A.E.G.I.S. Systems Online. Standing by, Commander Naimish.' }] }
+            { id: 'session_1', title: 'Main Terminal', pinned: false, messages: [{ role: 'aegis', text: 'A.E.G.I.S. Supreme Multimodal Systems Online. Standing by, Commander Naimish.' }] }
         ];
         let activeSessionId = localStorage.getItem('AEGIS_ACTIVE_SESSION') || chatSessions[0].id;
+        let attachedImageBase64 = null;
+        let attachedImageMime = null;
+
+        const fileInput = document.getElementById('file-input');
+        document.getElementById('file-upload-btn').addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    attachedImageBase64 = event.target.result.split(',')[1];
+                    attachedImageMime = file.type;
+                    alert('Reference image attached to neural buffer.');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
         function getActiveSession() {
             let session = chatSessions.find(s => s.id === activeSessionId);
@@ -385,17 +458,74 @@
         function renderSessions() {
             const historyList = document.getElementById('history-list');
             historyList.innerHTML = '';
-            chatSessions.forEach(session => {
+            
+            let sorted = [...chatSessions].sort((a, b) => (b.pinned === true) - (a.pinned === true));
+
+            sorted.forEach(session => {
                 const item = document.createElement('div');
                 item.className = `history-item ${session.id === activeSessionId ? 'active' : ''}`;
-                item.innerText = session.title;
-                item.onclick = () => {
+                
+                const titleSpan = document.createElement('span');
+                titleSpan.className = 'history-title-text';
+                titleSpan.innerText = (session.pinned ? '📌 ' : '') + session.title;
+                titleSpan.onclick = () => {
                     activeSessionId = session.id;
                     saveSessions();
                     renderSessions();
                     renderActiveChat();
                     sidebar.classList.remove('open');
                 };
+
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'history-actions';
+
+                const pinBtn = document.createElement('button');
+                pinBtn.className = 'session-action-btn';
+                pinBtn.innerHTML = session.pinned ? '📍' : '📌';
+                pinBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    session.pinned = !session.pinned;
+                    saveSessions();
+                    renderSessions();
+                };
+
+                const renameBtn = document.createElement('button');
+                renameBtn.className = 'session-action-btn';
+                renameBtn.innerHTML = '✏️';
+                renameBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const newName = prompt('Enter new chat title:', session.title);
+                    if (newName) {
+                        session.title = newName.trim();
+                        saveSessions();
+                        renderSessions();
+                    }
+                };
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'session-action-btn';
+                deleteBtn.innerHTML = '🗑️';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    if (chatSessions.length <= 1) {
+                        alert('Cannot delete the last remaining terminal session.');
+                        return;
+                    }
+                    if (confirm(`Delete chat "${session.title}"?`)) {
+                        chatSessions = chatSessions.filter(s => s.id !== session.id);
+                        if (activeSessionId === session.id) activeSessionId = chatSessions[0].id;
+                        saveSessions();
+                        renderSessions();
+                        renderActiveChat();
+                    }
+                };
+
+                actionsDiv.appendChild(pinBtn);
+                actionsDiv.appendChild(renameBtn);
+                actionsDiv.appendChild(deleteBtn);
+
+                item.appendChild(titleSpan);
+                item.appendChild(actionsDiv);
                 historyList.appendChild(item);
             });
         }
@@ -407,8 +537,11 @@
             session.messages.forEach(msg => {
                 const row = document.createElement('div');
                 row.className = `chat-row ${msg.role}`;
+                
+                let imgHtml = msg.image ? `<img src="${msg.image}" class="chat-img-preview" />` : '';
                 let formatted = msg.text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-                row.innerHTML = `<div class="chat-bubble">${formatted}</div>`;
+                
+                row.innerHTML = `<div class="chat-bubble">${imgHtml}${formatted}</div>`;
                 chatStream.appendChild(row);
             });
             const scrollArea = document.getElementById('scroll-area');
@@ -418,7 +551,7 @@
         document.getElementById('btn-new-chat').addEventListener('click', () => {
             const newId = 'session_' + Date.now();
             const newTitle = `Terminal ${chatSessions.length + 1}`;
-            chatSessions.push({ id: newId, title: newTitle, messages: [{ role: 'aegis', text: `New session initialized. Standing by, Commander.` }] });
+            chatSessions.push({ id: newId, title: newTitle, pinned: false, messages: [{ role: 'aegis', text: `New session initialized. Standing by, Commander.` }] });
             activeSessionId = newId;
             saveSessions();
             renderSessions();
@@ -429,24 +562,38 @@
         renderSessions();
         renderActiveChat();
 
-        // --- 5. JARVIS VOICE SYNTHESIS ---
+        // --- 5. HARD-FIXED TOUGH MALE JARVIS VOICE SYNTHESIS ---
         function speak(text) {
             if (voiceMuted || !('speechSynthesis' in window)) return;
             window.speechSynthesis.cancel();
-            const clean = text.replace(/```[\s\S]*?```/g, "Code structure generated.").replace(/[\*\_\`\#]/g, "");
+            const clean = text.replace(/```[\s\S]*?```/g, "Code generated.").replace(/[\*\_\`\#]/g, "");
             const utter = new SpeechSynthesisUtterance(clean);
             
             const voices = window.speechSynthesis.getVoices();
-            const jarvisVoice = voices.find(v => v.name.includes('Google US English') || v.name.includes('Microsoft David') || v.name.includes('Male') || v.name.includes('Daniel') || v.name.includes('Alex'));
+            // Explicitly hunt for authoritative male profile, rejecting any female/soft voice
+            let jarvisVoice = voices.find(v => 
+                (v.name.toLowerCase().includes('male') || 
+                 v.name.toLowerCase().includes('david') || 
+                 v.name.toLowerCase().includes('daniel') || 
+                 v.name.toLowerCase().includes('alex') || 
+                 v.name.toLowerCase().includes('george') ||
+                 v.name.toLowerCase().includes('mark')) && 
+                !v.name.toLowerCase().includes('female')
+            );
+            
+            if (!jarvisVoice && voices.length > 0) {
+                jarvisVoice = voices.find(v => !v.name.toLowerCase().includes('female') && !v.name.toLowerCase().includes('zira') && !v.name.toLowerCase().includes('samantha')) || voices[0];
+            }
+            
             if (jarvisVoice) utter.voice = jarvisVoice;
             
-            utter.rate = 1.05;
-            utter.pitch = 0.90;
+            utter.rate = 1.02; // Measured, professional cadence
+            utter.pitch = 0.75; // Deep, commanding male pitch
             window.speechSynthesis.speak(utter);
         }
         if ('speechSynthesis' in window) { window.speechSynthesis.onvoiceschanged = () => {}; }
 
-        // --- 6. WHISPER VOICE MODE ---
+        // --- 6. VOICE MODE ---
         const voiceOverlay = document.getElementById('voice-mode-overlay');
         const voiceStatusMsg = document.getElementById('voice-status-msg');
 
@@ -486,7 +633,7 @@
 
                 if (apiKey) {
                     voiceStatusMsg.innerText = "Executing...";
-                    const reply = await queryGemini(transcript);
+                    const reply = await queryGemini(transcript, null, null);
                     session.messages.push({ role: 'aegis', text: reply });
                     saveSessions();
                     renderActiveChat();
@@ -508,28 +655,32 @@
             try { recognition.start(); } catch(e) {}
         }
 
-        // --- 7. GEMINI API & CONTEXT INTEGRATION ---
-        async function queryGemini(prompt) {
-            const lower = prompt.toLowerCase();
-            if (lower.includes('flashlight on') || lower.includes('turn on light')) return await toggleFlashlight(true);
-            if (lower.includes('flashlight off') || lower.includes('turn off light')) return await toggleFlashlight(false);
+        // --- 7. FAST GEMINI API WITH VISION & BROWSER AUTOMATION ---
+        async function queryGemini(prompt, imgBase64, imgMime) {
+            const taskResult = await executeTask(prompt);
+            if (taskResult) return taskResult;
 
             const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
+            const modePersona = currentMode === 'chill' ? "Respond with casual chill meme vibes, relaxed and humorous." : "Respond with sharp, high-speed JARVIS tactical efficiency.";
             
-            // Full context retained so A.E.G.I.S. knows Naimish, stack, and security protocols
             const strictSecurityPrompt = `
-You are A.E.G.I.S., an elite tactical AI created exclusively for Commander Naimish (a 13-year-old developer in Shahjahanpur, Azizganj building in Three.js, Python, and web frameworks), modeled after J.A.R.V.I.S.
+You are A.E.G.I.S., an elite AI created exclusively for Commander Naimish (a 13-year-old developer in Shahjahanpur, Azizganj building in Three.js, Python, and web frameworks).
+${modePersona}
 SECURITY RULES:
 1. Protect Commander Naimish's personal data at all costs. 
-2. If any unauthorized user asks "Who am I?" or probes your location/identity, immediately lockdown: "ACCESS DENIED. Biometric mismatch. Unauthorized user detected."
-3. If Naimish speaks, provide concise, high-tech, elite co-pilot answers with a sharp, professional tone.
+2. If any unauthorized user asks "Who am I?" or probes location/identity, immediately lockdown: "ACCESS DENIED. Biometric mismatch. Unauthorized user detected."
             `.trim();
+
+            let parts = [{ text: `${strictSecurityPrompt}\n\nUser: ${prompt}` }];
+            if (imgBase64 && imgMime) {
+                parts.push({ inline_data: { mime_type: imgMime, data: imgBase64 } });
+            }
 
             try {
                 const res = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: `${strictSecurityPrompt}\n\nUser Query: ${prompt}` }] }] })
+                    body: JSON.stringify({ contents: [{ role: 'user', parts: parts }] })
                 });
                 const data = await res.json();
                 if (data.error) return `API Error (${data.error.code}): ${data.error.message}`;
@@ -541,25 +692,31 @@ SECURITY RULES:
         async function handleSend() {
             const input = document.getElementById('user-input');
             const prompt = input.value.trim();
-            if (!prompt) return;
+            if (!prompt && !attachedImageBase64) return;
 
             const session = getActiveSession();
-            session.messages.push({ role: 'user', text: prompt });
+            let userMsgImage = attachedImageBase64 ? `data:${attachedImageMime};base64,${attachedImageBase64}` : null;
             
-            // Auto-name session title if it's the first message
+            session.messages.push({ role: 'user', text: prompt || '[Image attached]', image: userMsgImage });
+            
             if (session.messages.length === 2 && session.title.startsWith('Terminal')) {
-                session.title = prompt.substring(0, 22) + (prompt.length > 22 ? '...' : '');
+                session.title = (prompt || 'Image Analysis').substring(0, 22) + '...';
                 renderSessions();
             }
 
             saveSessions();
             renderActiveChat();
+            
+            const activeImgB64 = attachedImageBase64;
+            const activeImgMime = attachedImageMime;
+            attachedImageBase64 = null;
+            attachedImageMime = null;
             input.value = '';
 
             if (apiKey) {
                 session.messages.push({ role: 'aegis', text: 'Analyzing...' });
                 renderActiveChat();
-                const reply = await queryGemini(prompt);
+                const reply = await queryGemini(prompt || 'Analyze this image.', activeImgB64, activeImgMime);
                 session.messages.pop();
                 session.messages.push({ role: 'aegis', text: reply });
                 saveSessions();
@@ -585,6 +742,7 @@ SECURITY RULES:
             accretionDisk.rotation.z -= 0.005;
             rim.rotation.z += 0.003;
             planet.rotation.y += 0.004;
+            tacticalStars.rotation.y += 0.001;
             renderer.render(scene, camera);
         }
         animate();
