@@ -1,794 +1,716 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="silk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>A.E.G.I.S. // SUPREME OS WORKSTATION</title>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>J.A.R.V.I.S. x A.E.G.I.S. // SUPREME NEURAL OS</title>
+    
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@500,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
-        :root {
-            --bg-color: #020305;
-            --panel-bg: rgba(12, 14, 20, 0.92);
-            --text-color: #e3e3e3;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --bubble-user: #222530;
-            --header-bg: rgba(2, 3, 5, 0.85);
+        /* === 5 STYLE MODES / THEMES === */
+        :root[data-theme="silk"] {
+            --bg: #030305; --card: #0d0e12; --border: rgba(255, 255, 255, 0.08);
+            --accent: #00f0ff; --accent-grad: linear-gradient(135deg, #00f0ff, #7000ff);
+            --text: #f8fafc; --subtext: #8e95a5; --pill-bg: #111217; --sidebar-bg: #07080a;
         }
-        [data-theme="light"] {
-            --bg-color: #f0f4f9;
-            --panel-bg: rgba(255, 255, 255, 0.92);
-            --text-color: #1f1f1f;
-            --border-color: rgba(0, 0, 0, 0.08);
-            --bubble-user: #d3e3fd;
-            --header-bg: rgba(240, 244, 249, 0.85);
+        :root[data-theme="gemini"] {
+            --bg: #0b0f19; --card: rgba(23, 31, 50, 0.75); --border: rgba(96, 165, 250, 0.22);
+            --accent: #60a5fa; --accent-grad: linear-gradient(135deg, #4285f4, #9b72cb, #d96570);
+            --text: #f0f4f8; --subtext: #94a3b8; --pill-bg: rgba(30, 41, 69, 0.8); --sidebar-bg: #070a12;
         }
-        [data-theme="chill"] {
-            --bg-color: #1a0f2e;
-            --panel-bg: rgba(45, 27, 78, 0.9);
-            --text-color: #ffd166;
-            --border-color: rgba(255, 209, 102, 0.2);
-            --bubble-user: #4a2574;
-            --header-bg: rgba(26, 15, 46, 0.85);
+        :root[data-theme="chatgpt"] {
+            --bg: #0d0d0d; --card: #171717; --border: rgba(255, 255, 255, 0.1);
+            --accent: #10a37f; --accent-grad: linear-gradient(135deg, #10a37f, #0d8a6a);
+            --text: #ececec; --subtext: #9b9b9b; --pill-bg: #212121; --sidebar-bg: #111111;
         }
-        [data-theme="serious"] {
-            --bg-color: #020704;
-            --panel-bg: rgba(4, 18, 10, 0.94);
-            --text-color: #00ff78;
-            --border-color: rgba(0, 255, 120, 0.3);
-            --bubble-user: #082614;
-            --header-bg: rgba(2, 7, 4, 0.85);
+        :root[data-theme="blackhole"] {
+            --bg: #000000; --card: rgba(12, 8, 4, 0.78); --border: rgba(249, 115, 22, 0.28);
+            --accent: #f97316; --accent-grad: linear-gradient(135deg, #f97316, #eab308, #dc2626);
+            --text: #fff7ed; --subtext: #a8a29e; --pill-bg: rgba(24, 15, 8, 0.85); --sidebar-bg: #030201;
         }
-        [data-theme="split"] {
-            --bg-color: #010409;
-            --panel-bg: rgba(10, 20, 35, 0.92);
-            --text-color: #7cacfa;
-            --border-color: rgba(124, 172, 248, 0.3);
-            --bubble-user: #152642;
-            --header-bg: rgba(1, 4, 9, 0.85);
+        :root[data-theme="acid"] {
+            --bg: #020408; --card: rgba(10, 14, 22, 0.88); --border: rgba(163, 230, 53, 0.22);
+            --accent: #a3e635; --accent-grad: linear-gradient(135deg, #a3e635, #10b981);
+            --text: #f8fafc; --subtext: #94a3b8; --pill-bg: #0b0f17; --sidebar-bg: #010204;
         }
 
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Satoshi', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; position: relative; transition: background 0.3s ease; }
+
+        /* === ARC REACTOR SINGULARITY ENGINE === */
+        .singularity-bg {
+            position: fixed; top: 38%; left: 50%; transform: translate(-50%, -50%);
+            width: 320px; height: 320px; border-radius: 50%; pointer-events: none; z-index: 0;
+            opacity: 0.25; transition: opacity 0.5s ease;
+        }
+        :root[data-theme="blackhole"] .singularity-bg { opacity: 0.65; }
+
+        .accretion-disk {
+            position: absolute; inset: -30px; border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent, var(--accent), #fff, var(--accent), transparent);
+            filter: blur(28px); animation: spinHole 9s linear infinite;
+        }
+        .event-horizon {
+            position: absolute; inset: 35px; border-radius: 50%; background: #000;
+            box-shadow: inset 0 0 35px var(--accent), 0 0 40px var(--accent);
+        }
+        @keyframes spinHole { 100% { transform: rotate(360deg); } }
+
+        /* === TOP HEADER === */
+        .top-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 18px; border-bottom: 1px solid var(--border);
+            background: var(--card); backdrop-filter: blur(20px); z-index: 10;
+        }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .circle-btn {
+            width: 38px; height: 38px; border-radius: 50%; background: var(--pill-bg);
+            border: 1px solid var(--border); color: var(--text); display: flex;
+            align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: 0.2s;
+        }
+        .circle-btn:active { transform: scale(0.92); border-color: var(--accent); }
+        .mic-btn {
+            border-color: rgba(0, 240, 255, 0.4);
+            background: radial-gradient(circle, rgba(0,240,255,0.2) 0%, rgba(17,18,23,0.9) 100%);
+        }
+        .mic-btn.listening { animation: pulseMic 1.2s infinite; border-color: #ef4444; }
+        @keyframes pulseMic { 0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); } 50% { box-shadow: 0 0 0 10px rgba(239,68,68,0); } }
+
+        .brand-logo {
+            font-family: 'Clash Display', sans-serif; font-size: 18px; font-weight: 700;
+            letter-spacing: 1.5px; background: var(--accent-grad);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        body, html {
-            width: 100%; 
-            height: 100%; 
-            overflow: hidden;
-            background: var(--bg-color); 
-            color: var(--text-color);
-            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            transition: background 0.4s ease, color 0.4s ease;
+        /* === SIDEBAR DRAWER === */
+        .sidebar-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);
+            z-index: 99; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
         }
+        .sidebar-overlay.active { opacity: 1; pointer-events: auto; }
 
-        #canvas-container { 
-            width: 100%; 
-            height: 100%; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            z-index: 1; 
-            pointer-events: none; 
+        .sidebar {
+            position: fixed; top: 0; left: -310px; width: 300px; height: 100%;
+            background: var(--sidebar-bg); border-right: 1px solid var(--border);
+            z-index: 100; display: flex; flex-direction: column; transition: left 0.28s cubic-bezier(0.1, 0.9, 0.2, 1);
+            box-shadow: 15px 0 40px rgba(0,0,0,0.8);
         }
+        .sidebar.active { left: 0; }
 
-        #meme-bg { 
-            display: none; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1000&auto=format&fit=crop') center/cover no-repeat; 
-            opacity: 0.25; 
-            z-index: 1; 
-            pointer-events: none; 
-            filter: hue-rotate(45deg); 
-        }
-
-        .app-shell { 
-            position: absolute; 
-            z-index: 10; 
-            width: 100%; 
-            height: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-        }
-
-        header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 14px 20px; 
-            background: var(--header-bg); 
-            backdrop-filter: blur(12px); 
-            border-bottom: 1px solid var(--border-color); 
-            z-index: 20; 
-        }
-
-        .brand-group { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-        }
-
-        .brand { 
-            font-size: 16px; 
-            font-weight: 700; 
-            letter-spacing: 0.5px; 
-            background: linear-gradient(90deg, #7cacf8, #c58af9, #e879f9); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            cursor: pointer; 
-        }
-
-        .header-actions { 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-        }
-
-        .icon-btn { 
-            background: var(--border-color); 
-            border: 1px solid var(--border-color); 
-            color: var(--text-color); 
-            width: 34px; 
-            height: 34px; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            cursor: pointer; 
-            transition: all 0.2s ease; 
-            font-size: 14px; 
-        }
-
-        .icon-btn:hover { 
-            opacity: 0.8; 
-            transform: scale(1.05); 
-        }
-
-        /* Sidebar Styling */
-        #sidebar { 
-            position: absolute; 
-            top: 0; 
-            left: -320px; 
-            width: 300px; 
-            height: 100%; 
-            background: var(--panel-bg); 
-            backdrop-filter: blur(25px); 
-            border-right: 1px solid var(--border-color); 
-            z-index: 100; 
-            display: flex; 
-            flex-direction: column; 
-            padding: 20px; 
-            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            box-shadow: 10px 0 30px rgba(0,0,0,0.5); 
-            overflow-y: auto; 
-        }
-
-        #sidebar.open { 
-            left: 0; 
-        }
-
-        .sidebar-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 15px; 
-        }
-
-        .sidebar-title { 
-            font-size: 13px; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            color: var(--text-color); 
-        }
-
-        .sidebar-section { 
-            margin-bottom: 16px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 8px; 
-        }
-
-        .section-label { 
-            font-size: 10px; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            color: #888; 
-            letter-spacing: 0.5px; 
-        }
-
-        .api-vault { 
-            display: flex; 
-            gap: 6px; 
-        }
-
-        .vault-input { 
-            flex: 1; 
-            background: rgba(0,0,0,0.1); 
-            border: 1px solid var(--border-color); 
-            color: var(--text-color); 
-            padding: 6px 10px; 
-            border-radius: 6px; 
-            font-size: 11px; 
-            outline: none; 
+        .sidebar-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+        .new-chat-btn {
+            background: var(--accent-grad); color: #fff; border: none; padding: 11px;
+            border-radius: 12px; font-weight: 800; font-size: 12px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
         }
         
-        .history-list { 
-            max-height: 150px; 
-            overflow-y: auto; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 6px; 
-            padding-right: 4px; 
+        .sidebar-chats { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+        .chat-item {
+            padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.02);
+            border: 1px solid transparent; color: var(--subtext); font-size: 12px; display: flex;
+            justify-content: space-between; align-items: center; cursor: pointer; transition: 0.15s;
         }
+        .chat-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+        .chat-item.active { background: var(--card); border-color: var(--border); color: var(--text); font-weight: 600; }
+        
+        .chat-item-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .chat-actions { display: flex; gap: 6px; opacity: 0; transition: opacity 0.15s; }
+        .chat-item:hover .chat-actions { opacity: 1; }
+        .chat-action-btn { background: none; border: none; color: var(--subtext); cursor: pointer; font-size: 12px; padding: 2px; }
+        .chat-action-btn:hover { color: var(--accent); }
 
-        .history-item { 
-            font-size: 11.5px; 
-            padding: 9px 12px; 
-            border-radius: 8px; 
-            background: rgba(255,255,255,0.03); 
-            border: 1px solid var(--border-color); 
-            cursor: pointer; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            gap: 6px; 
+        .sidebar-footer { padding: 14px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+        .sidebar-footer-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 10px; font-size: 11.5px; font-weight: 700; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 8px; }
+
+        /* === MAIN STAGE === */
+        .main-stage { flex: 1; overflow-y: auto; padding: 18px 16px 110px 16px; display: flex; flex-direction: column; gap: 16px; z-index: 5; scroll-behavior: smooth; }
+
+        /* === BENTO 2x2 GRID === */
+        .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .bento-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 24px;
+            padding: 20px 16px; display: flex; flex-direction: column; gap: 10px;
+            cursor: pointer; backdrop-filter: blur(16px); transition: 0.22s ease; min-height: 175px; justify-content: center;
         }
+        .bento-card:active { transform: scale(0.96); border-color: var(--accent); }
+        .bento-emoji { font-size: 32px; margin-bottom: 2px; }
+        .bento-title { font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.25; }
+        .bento-desc { font-size: 12.5px; color: var(--subtext); line-height: 1.45; }
 
-        .history-item.active { 
-            background: rgba(124, 172, 248, 0.2); 
-            border-color: var(--text-color); 
-            font-weight: 500; 
-        }
+        /* === CHAT STREAM === */
+        #chat-Area { display: none; flex-direction: column; gap: 14px; padding-bottom: 20px; }
+        #chat-Area.active { display: flex; }
 
-        .history-title-text { 
-            flex: 1; 
-            white-space: nowrap; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-        }
+        .msg { max-width: 90%; padding: 14px 16px; border-radius: 20px; font-size: 13.5px; line-height: 1.6; word-break: break-word; position: relative; animation: popIn 0.25s ease; }
+        @keyframes popIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .msg.user { background: var(--accent-grad); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 500; }
+        .msg.agent { background: var(--card); border: 1px solid var(--border); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; backdrop-filter: blur(20px); }
+        
+        .msg.agent pre { background: #050608; padding: 34px 12px 12px 12px; border-radius: 12px; margin: 10px 0; overflow-x: auto; border: 1px solid var(--border); position: relative; }
+        .msg.agent code { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 11.5px; }
+        .code-btn-bar { position: absolute; top: 6px; right: 6px; display: flex; gap: 6px; }
+        .mini-code-btn { background: var(--accent); color: #000; border: none; padding: 3px 8px; border-radius: 6px; font-size: 9px; font-weight: 800; cursor: pointer; font-family: 'JetBrains Mono', monospace; }
 
-        .history-actions { 
-            display: flex; 
-            gap: 4px; 
-        }
-
-        .session-action-btn { 
-            background: transparent; 
-            border: none; 
-            color: var(--text-color); 
-            cursor: pointer; 
-            font-size: 11px; 
-            opacity: 0.6; 
-            padding: 2px; 
-        }
-
-        /* Dashboard OS Hub */
-        #dashboard-view { 
-            flex: 1; 
-            overflow-y: auto; 
-            padding: 24px 20px; 
-            z-index: 5; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: flex-start; 
-            gap: 24px; 
-        }
-
-        .dashboard-grid { 
-            width: 100%; 
-            max-width: 760px; 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 16px; 
-        }
-
-        .dash-tile { 
-            background: var(--panel-bg); 
-            border: 1px solid var(--border-color); 
-            border-radius: 20px; 
-            padding: 24px 20px; 
-            backdrop-filter: blur(15px); 
-            cursor: pointer; 
-            transition: all 0.25s ease; 
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2); 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px; 
-        }
-
-        .dash-tile:hover { 
-            transform: translateY(-4px); 
-            border-color: rgba(124, 172, 248, 0.4); 
-            box-shadow: 0 12px 40px rgba(124,172,248,0.15); 
-        }
-
-        .dash-tile-icon { font-size: 28px; }
-        .dash-tile-title { font-size: 15px; font-weight: 700; color: var(--text-color); }
-        .dash-tile-desc { font-size: 12px; color: #999; line-height: 1.4; }
-
-        /* Connected Skills UI */
-        .skills-container { 
-            width: 100%; 
-            max-width: 760px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-        }
-
-        .skills-header { 
-            font-size: 12px; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            color: #7cacfa; 
-            padding-left: 8px; 
-        }
-
-        .skills-grid { 
-            display: flex; 
-            gap: 12px; 
-            flex-wrap: wrap; 
-        }
-
-        .skill-btn { 
-            background: rgba(255,255,255,0.05); 
-            border: 1px solid var(--border-color); 
-            color: var(--text-color); 
-            padding: 12px 20px; 
-            border-radius: 12px; 
-            font-size: 14px; 
-            font-weight: 500; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-            transition: all 0.2s; 
-            flex: 1; 
-            min-width: 120px; 
-            justify-content: center; 
-            backdrop-filter: blur(10px); 
-        }
-
-        .skill-btn:hover { 
-            background: rgba(124, 172, 248, 0.2); 
-            border-color: #7cacfa; 
-            transform: translateY(-2px); 
-        }
-
-        /* Floating Notepad Modal */
-        #notepad-modal { 
-            display: none; 
-            position: absolute; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            width: 90%; 
-            max-width: 500px; 
-            height: 400px; 
-            background: var(--panel-bg); 
-            border: 1px solid #7cacfa; 
-            border-radius: 16px; 
-            z-index: 300; 
-            flex-direction: column; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6); 
-            backdrop-filter: blur(30px); 
-        }
-
-        .notepad-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 12px 16px; 
-            background: rgba(0,0,0,0.2); 
-            border-bottom: 1px solid var(--border-color); 
-            border-radius: 16px 16px 0 0; 
-            font-weight: bold; 
-            font-size: 13px; 
-            color: #7cacfa; 
-        }
-
-        .notepad-header button { 
-            background: none; 
-            border: none; 
-            color: var(--text-color); 
-            cursor: pointer; 
-            font-size: 14px; 
-        }
-
-        #notepad-textarea { 
-            flex: 1; 
-            background: transparent; 
-            border: none; 
-            padding: 16px; 
-            color: var(--text-color); 
-            font-family: 'JetBrains Mono', monospace; 
-            font-size: 13px; 
-            outline: none; 
-            resize: none; 
-            line-height: 1.5; 
-        }
-
-        /* Chat Stream */
-        .chat-scroll { 
-            flex: 1; 
-            overflow-y: auto; 
-            padding: 16px 20px; 
-            display: none; 
-            flex-direction: column; 
-            gap: 16px; 
-            scroll-behavior: smooth; 
-            z-index: 5; 
-        }
-
-        .chat-container { 
-            width: 100%; 
-            max-width: 760px; 
-            margin: 0 auto; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 18px; 
-        }
-
-        .chat-row { 
-            display: flex; 
-            flex-direction: column; 
-            width: 100%; 
-            animation: fadeIn 0.15s ease forwards; 
-        }
-
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(4px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-
-        .chat-row.user { align-items: flex-end; }
-        .chat-row.aegis { align-items: flex-start; }
-
-        .chat-bubble { 
-            max-width: 85%; 
-            padding: 14px 18px; 
-            border-radius: 16px; 
-            font-size: 13.5px; 
-            line-height: 1.6; 
-            word-break: break-word; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15); 
-        }
-
-        .user .chat-bubble { 
-            background: var(--bubble-user); 
-            color: var(--text-color); 
-            border-bottom-right-radius: 4px; 
-        }
-
-        .aegis .chat-bubble { 
-            background: var(--panel-bg); 
-            color: var(--text-color); 
-            border: 1px solid var(--border-color); 
-            border-bottom-left-radius: 4px; 
-            backdrop-filter: blur(15px); 
-        }
-
-        .chat-img-preview { 
-            max-width: 200px; 
-            border-radius: 8px; 
-            margin-bottom: 8px; 
-            border: 1px solid var(--border-color); 
+        /* === BOTTOM DOCK === */
+        .bottom-dock {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            padding: 10px 16px 16px 16px; background: linear-gradient(to top, var(--bg) 85%, transparent);
+            z-index: 50; display: flex; flex-direction: column; gap: 8px;
         }
         
-        .chat-bubble h2 { 
-            font-size: 18px; 
-            font-weight: 700; 
-            color: #7cacfa; 
-            margin: 12px 0 6px 0; 
-            border-bottom: 1px solid var(--border-color); 
-            padding-bottom: 4px; 
+        .skills-header { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: var(--accent); text-transform: uppercase; padding-left: 4px; }
+        .skills-pills { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+        .skills-pills::-webkit-scrollbar { display: none; }
+        
+        .pill {
+            background: var(--pill-bg); border: 1px solid var(--border); color: var(--text);
+            padding: 7px 14px; border-radius: 100px; font-size: 11.5px; font-weight: 600;
+            white-space: nowrap; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;
         }
+        .pill:active, .pill.active { border-color: var(--accent); background: rgba(0, 240, 255, 0.15); }
 
-        .chat-bubble h3 { 
-            font-size: 15px; 
-            font-weight: 700; 
-            color: #c58af9; 
-            margin: 10px 0 4px 0; 
+        .prompt-capsule {
+            display: flex; align-items: center; gap: 10px; background: var(--pill-bg);
+            border: 1px solid var(--border); border-radius: 100px; padding: 6px 8px 6px 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
         }
-
-        .chat-bubble ul, .chat-bubble ol { 
-            padding-left: 20px; 
-            margin: 8px 0; 
+        .clip-btn { background: none; border: none; color: var(--accent); font-size: 18px; cursor: pointer; display: flex; align-items: center; }
+        .capsule-input { flex: 1; background: transparent; border: none; color: var(--text); font-size: 13px; outline: none; }
+        .capsule-input::placeholder { color: var(--subtext); }
+        
+        .up-btn {
+            width: 38px; height: 38px; border-radius: 50%; border: none;
+            background: var(--accent-grad); color: #fff; font-size: 17px; font-weight: 900;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
+        .up-btn:disabled { opacity: 0.4; }
 
-        .chat-bubble li { 
-            margin-bottom: 4px; 
+        /* === MODALS === */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); z-index: 100; align-items: center; justify-content: center; padding: 18px; }
+        .modal.active { display: flex; }
+        .modal-box { width: 100%; max-width: 390px; background: var(--card); border: 1px solid var(--border); border-radius: 26px; padding: 22px; display: flex; flex-direction: column; gap: 14px; max-height: 88vh; overflow-y: auto; }
+        
+        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .theme-btn { padding: 10px; border-radius: 12px; border: 1px solid var(--border); background: var(--pill-bg); color: var(--text); font-size: 11.5px; font-weight: 700; cursor: pointer; text-align: left; }
+        .theme-btn.active { border-color: var(--accent); color: var(--accent); }
+
+        .vault-input, .workspace-area {
+            width: 100%; background: #05060a; border: 1px solid var(--border); border-radius: 14px;
+            padding: 12px; color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none;
         }
-
-        pre { 
-            background: #08090d; 
-            border: 1px solid var(--border-color); 
-            padding: 12px; 
-            border-radius: 8px; 
-            color: #8cb4ff; 
-            overflow-x: auto; 
-            margin: 10px 0; 
-            font-family: 'JetBrains Mono', monospace; 
-            font-size: 11px; 
-        }
-
-        /* Docks */
-        .action-dock { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            max-width: 760px; 
-            margin: 0 auto; 
-            padding: 0 20px 8px; 
-            width: 100%; 
-            z-index: 5; 
-        }
-
-        .chips-row { 
-            display: flex; 
-            gap: 8px; 
-            overflow-x: auto; 
-            scrollbar-width: none; 
-        }
-
-        .chip { 
-            background: var(--panel-bg); 
-            border: 1px solid var(--border-color); 
-            color: var(--text-color); 
-            padding: 6px 12px; 
-            border-radius: 16px; 
-            font-size: 11px; 
-            cursor: pointer; 
-            white-space: nowrap; 
-            transition: all 0.2s ease; 
-            backdrop-filter: blur(10px); 
-        }
-
-        .chip:hover { opacity: 0.85; }
-
-        .prompt-dock { 
-            padding: 4px 20px 20px; 
-            background: linear-gradient(0deg, var(--bg-color) 60%, transparent 100%); 
-            z-index: 5; 
-        }
-
-        .dock-container { 
-            width: 100%; 
-            max-width: 760px; 
-            margin: 0 auto; 
-            background: var(--panel-bg); 
-            border: 1px solid var(--border-color); 
-            border-radius: 28px; 
-            padding: 6px 8px 6px 12px; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-            backdrop-filter: blur(20px); 
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2); 
-        }
-
-        .dock-input { 
-            flex: 1; 
-            background: transparent; 
-            border: none; 
-            color: var(--text-color); 
-            font-size: 13.5px; 
-            outline: none; 
-        }
-
-        #file-upload-btn { 
-            background: transparent; 
-            border: none; 
-            cursor: pointer; 
-            color: var(--text-color); 
-            font-size: 16px; 
-            padding: 4px; 
-        }
-
-        #file-input { display: none; }
-
-        .dock-btn { 
-            background: linear-gradient(135deg, #7cacf8, #c58af9); 
-            border: none; 
-            width: 36px; 
-            height: 36px; 
-            border-radius: 50%; 
-            color: #020305; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 16px; 
-            font-weight: bold; 
-        }
-
-        #voice-mode-overlay { 
-            display: none; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(2, 3, 5, 0.95); 
-            z-index: 200; 
-            backdrop-filter: blur(30px); 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            gap: 24px; 
-            text-align: center; 
-            padding: 20px; 
-        }
-
-        .voice-orb { 
-            width: 120px; 
-            height: 120px; 
-            border-radius: 50%; 
-            background: linear-gradient(135deg, #7cacf8, #c58af9, #e879f9); 
-            box-shadow: 0 0 50px rgba(124, 172, 248, 0.5); 
-            animation: pulseOrb 2s infinite ease-in-out; 
-        }
-
-        @keyframes pulseOrb { 
-            0% { transform: scale(1); } 
-            50% { transform: scale(1.15); } 
-            100% { transform: scale(1); } 
-        }
-
-        .voice-status-text { 
-            font-size: 15px; 
-            font-weight: 500; 
-            color: #fff; 
-            letter-spacing: 0.5px; 
-            font-family: 'JetBrains Mono', monospace; 
-        }
+        .workspace-area { height: 200px; resize: none; color: #34d399; }
+        .primary-btn { background: var(--accent-grad); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 12px; cursor: pointer; text-align: center; }
     </style>
 </head>
-<body data-theme="dark">
+<body>
 
-    <div id="canvas-container"></div>
-    <div id="meme-bg"></div>
-
-    <div id="voice-mode-overlay">
-        <div class="voice-orb"></div>
-        <div class="voice-status-text" id="voice-status-msg">JARVIS Neural Interface Active...</div>
-        <button class="chip" id="btn-exit-voice" style="padding: 10px 24px; font-size: 13px; background: rgba(255,255,255,0.1);">Exit Voice Mode</button>
+    <!-- ARC REACTOR SINGULARITY ENGINE -->
+    <div class="singularity-bg">
+        <div class="accretion-disk"></div>
+        <div class="event-horizon"></div>
     </div>
 
-    <!-- Floating Integrated Notepad Skill -->
-    <div id="notepad-modal">
-        <div class="notepad-header">
-            <span>📝 A.E.G.I.S. Secure Notes</span>
-            <button onclick="document.getElementById('notepad-modal').style.display='none'">✕</button>
-        </div>
-        <textarea id="notepad-textarea" placeholder="Type here. Notes automatically sync to local storage..."></textarea>
-    </div>
-
-    <div id="sidebar">
+    <!-- SIDEBAR DRAWER -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <span class="sidebar-title">A.E.G.I.S. Control</span>
-            <button class="icon-btn" id="sidebar-close">✕</button>
+            <button class="new-chat-btn" onclick="startNewChat()">+ New Chat</button>
         </div>
-
-        <div class="sidebar-section">
-            <span class="section-label">Neural API Key Vault</span>
-            <div class="api-vault">
-                <input type="password" id="api-key-input" class="vault-input" placeholder="AIzaSy..." />
-                <button class="chip" id="btn-save-key">Lock</button>
-            </div>
-        </div>
-
-        <!-- Custom Persona / Styling Control -->
-        <div class="sidebar-section">
-            <span class="section-label">Custom Persona Settings</span>
-            <textarea id="custom-persona-input" class="vault-input" style="height: 55px; resize: none; font-family: inherit;" placeholder="Instruct A.E.G.I.S. how to act..."></textarea>
-            <button class="chip" id="btn-save-persona" style="margin-top: 4px;">Update Personality</button>
-        </div>
-
-        <!-- Full 5-Mode Restored -->
-        <div class="sidebar-section">
-            <span class="section-label">System Style (5 Modes)</span>
-            <button class="chip" id="btn-mode-toggle" style="justify-content: space-between; display: flex; margin-bottom: 6px;">
-                <span>Visual Theme</span> <b id="mode-label">Dark (Black Hole)</b>
-            </button>
-            <button class="chip" id="btn-voice-mute" style="justify-content: space-between; display: flex;">
-                <span>Voice Output</span> <b id="mute-label">Active (JARVIS)</b>
-            </button>
-        </div>
-
-        <div class="sidebar-section" style="flex: 1; display: flex; flex-direction: column;">
-            <span class="section-label" style="display: flex; justify-content: space-between; align-items: center;">
-                <span>Chat Sessions</span>
-                <button class="chip" id="btn-new-chat" style="padding: 2px 8px; font-size: 10px; background: rgba(124,172,248,0.2); color: #7cacfa;">+ New</button>
-            </span>
-            <div class="history-list" id="history-list"></div>
+        <div class="sidebar-chats" id="sidebar-chats-list"></div>
+        <div class="sidebar-footer">
+            <button class="sidebar-footer-btn" onclick="openModal('security-modal'); toggleSidebar();">🔒 Settings & 5 Themes</button>
+            <button class="sidebar-footer-btn" onclick="openModal('notes-modal'); toggleSidebar();">📝 Code Workspace & Notes</button>
         </div>
     </div>
 
-    <div class="app-shell">
-        <header>
-            <div class="brand-group">
-                <button class="icon-btn" id="sidebar-open" title="Menu">⋮</button>
-                <div class="brand" onclick="showDashboard()">A.E.G.I.S.</div>
-            </div>
-            <div class="header-actions">
-                <button class="icon-btn" id="btn-launch-voice" title="Launch Voice Mode" style="background: rgba(124, 172, 248, 0.15); border-color: rgba(124, 172, 248, 0.4); color: #7cacfa;">🎙️</button>
-            </div>
-        </header>
+    <!-- TOP BAR -->
+    <div class="top-header">
+        <div class="header-left">
+            <button class="circle-btn" onclick="toggleSidebar()" title="Open Chat History">☰</button>
+            <div class="brand-logo" onclick="goHome()" style="cursor:pointer;">J.A.R.V.I.S. x A.E.G.I.S.</div>
+        </div>
+        <button class="circle-btn mic-btn" id="mic-trigger" onclick="toggleVoice()" title="Voice Co-Pilot">🎙️</button>
+    </div>
 
-        <div id="dashboard-view">
-            <div class="dashboard-grid">
-                <div class="dash-tile" onclick="openTerminal()">
-                    <div class="dash-tile-icon">🤖</div>
-                    <div class="dash-tile-title">Neural Terminal</div>
-                    <div class="dash-tile-desc">Launch lightning-fast AI co-pilot chat & coding.</div>
-                </div>
-                <div class="dash-tile" onclick="openCurrentAffairs()">
-                    <div class="dash-tile-icon">🌍</div>
-                    <div class="dash-tile-title">Current Affairs</div>
-                    <div class="dash-tile-desc">Instant high-speed global intelligence briefing.</div>
-                </div>
-                <div class="dash-tile" onclick="quickSend('Open Google search for AI trends')">
-                    <div class="dash-tile-icon">⚡</div>
-                    <div class="dash-tile-title">Hardware Control</div>
-                    <div class="dash-tile-desc">Trigger phone flashlight and web routines.</div>
-                </div>
-                <div class="dash-tile" onclick="sidebar.classList.add('open')">
-                    <div class="dash-tile-icon">🔒</div>
-                    <div class="dash-tile-title">Security & Themes</div>
-                    <div class="dash-tile-desc">Access 5 style modes and API credential vault.</div>
-                </div>
+    <!-- HIDDEN FILE UPLOADER -->
+    <input type="file" id="file-uploader" multiple style="display:none;" onchange="handleFileUpload(event)">
+
+    <!-- MAIN STAGE -->
+    <div class="main-stage" id="main-stage">
+        <!-- BENTO DASHBOARD -->
+        <div class="bento-grid" id="bento-dashboard">
+            <div class="bento-card" onclick="launchCoPilot('terminal')">
+                <div class="bento-emoji">🤖</div>
+                <div class="bento-title">Neural Terminal</div>
+                <div class="bento-desc">Launch lightning-fast AI co-pilot chat & coding.</div>
             </div>
 
-            <!-- Newly Integrated Connected Skills Section -->
-            <div class="skills-container">
-                <div class="skills-header">Connected Skills & Apps</div>
-                <div class="skills-grid">
-                    <button class="skill-btn" onclick="document.getElementById('notepad-modal').style.display='flex'">📝 Notepad</button>
-                    <button class="skill-btn" onclick="window.open('https://mail.google.com', '_blank')">📧 Gmail</button>
-                    <button class="skill-btn" onclick="window.open('https://calendar.google.com', '_blank')">📅 Calendar</button>
-                </div>
+            <div class="bento-card" onclick="launchCoPilot('affairs')">
+                <div class="bento-emoji">🌍</div>
+                <div class="bento-title">Current Affairs</div>
+                <div class="bento-desc">Instant high-speed global intelligence briefing.</div>
+            </div>
+
+            <div class="bento-card" onclick="openModal('hardware-modal')">
+                <div class="bento-emoji">⚡</div>
+                <div class="bento-title">Hardware Control</div>
+                <div class="bento-desc">Trigger phone flashlight and web routines.</div>
+            </div>
+
+            <div class="bento-card" onclick="openModal('security-modal')">
+                <div class="bento-emoji">🔒</div>
+                <div class="bento-title">Security & Themes</div>
+                <div class="bento-desc">Access 5 style modes and API credential vault.</div>
             </div>
         </div>
 
-        <div class="chat-scroll" id="scroll-area">
-            <div class="chat-container" id="chat-stream"></div>
+        <!-- NEURAL CHAT STREAM -->
+        <div id="chat-Area"></div>
+    </div>
+
+    <!-- BOTTOM DOCK -->
+    <div class="bottom-dock">
+        <div class="skills-header">CONNECTED SKILLS & APPS</div>
+        <div class="skills-pills">
+            <div class="pill" onclick="goHome()">🏠 Home Hub</div>
+            <div class="pill" onclick="openModal('notes-modal')">📝 Notes & Code</div>
+            <div class="pill" id="light-pill" onclick="toggleFlashlight()">🔦 Light On</div>
+            <div class="pill" onclick="document.getElementById('file-uploader').click()">📁 Load Files</div>
         </div>
 
-        <div class="action-dock">
-            <div class="chips-row">
-                <div class="chip" onclick="showDashboard()">🏠 Home Hub</div>
-                <div class="chip" onclick="document.getElementById('notepad-modal').style.display='flex'">📝 Notes</div>
-                <div class="chip" onclick="quickSend('Turn on flashlight')">🔦 Light On</div>
+        <div class="prompt-capsule">
+            <button class="clip-btn" onclick="document.getElementById('file-uploader').click()" title="Attach Files">📎</button>
+            <input type="text" id="prompt-input" class="capsule-input" placeholder="Ask J.A.R.V.I.S. or command Aegis..." onkeydown="if(event.key==='Enter') executeJarvis()">
+            <button class="up-btn" id="send-btn" onclick="executeJarvis()">↑</button>
+        </div>
+    </div>
+
+    <!-- MODAL 1 -->
+    <div id="security-modal" class="modal">
+        <div class="modal-box">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="font-size:16px;">🔒 Settings & 5 Themes</h3>
+                <button class="circle-btn" style="width:30px;height:30px;" onclick="closeModal('security-modal')">✕</button>
+            </div>
+            <div style="font-size:11px; color:var(--subtext);">SELECT OS INTERFACE THEME:</div>
+            <div class="theme-grid">
+                <button class="theme-btn" onclick="setTheme('silk')">🔵 Jarvis Arc</button>
+                <button class="theme-btn" onclick="setTheme('gemini')">🔵 Gemini Aura</button>
+                <button class="theme-btn" onclick="setTheme('chatgpt')">🟢 ChatGPT Obsidian</button>
+                <button class="theme-btn" onclick="setTheme('blackhole')">🟠 Event Horizon</button>
+                <button class="theme-btn" onclick="setTheme('acid')" style="grid-column: span 2;">🟢 Cyber Acid</button>
+            </div>
+            <div style="font-size:11px; color:var(--subtext); margin-top:4px;">UNIVERSAL GEMINI API KEY VAULT:</div>
+            <input type="password" id="api-key-input" class="vault-input" placeholder="Paste Gemini API Key here...">
+            <button class="primary-btn" onclick="saveCredentials()">SAVE CREDENTIALS & APPLY</button>
+        </div>
+    </div>
+
+    <!-- MODAL 2 -->
+    <div id="notes-modal" class="modal">
+        <div class="modal-box">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="font-size:16px;">📝 Code Workspace & Notes</h3>
+                <button class="circle-btn" style="width:30px;height:30px;" onclick="closeModal('notes-modal')">✕</button>
+            </div>
+            <div style="font-size:11px; color:var(--subtext);" id="loaded-file-label">Active File: index.html</div>
+            <textarea id="workspace-code" class="workspace-area" placeholder="Paste code, write notes, or load files... J.A.R.V.I.S. reads this automatically!"></textarea>
+            <div style="display:flex; gap:8px;">
+                <button class="primary-btn" style="flex:1;" onclick="downloadWorkspaceFile()">💾 DOWNLOAD / SAVE</button>
+                <button class="primary-btn" style="flex:1; background:#27273a;" onclick="document.getElementById('file-uploader').click()">📂 LOAD FILE</button>
             </div>
         </div>
+    </div>
 
-        <div class="prompt-dock">
-            <div class="dock-container">
-                <input type="file" id="file-input" accept="image/*" />
-                <button id="file-upload-btn" title="Upload Reference Image">📎</button>
-                
-                <input type="text" id="user-input" class="dock-input" placeholder="Ask A.E.G.I.S. for lightning response..." autocomplete="off"/>
-                <button class="dock-btn" id="send-btn">↑</button>
+    <!-- MODAL 3 -->
+    <div id="hardware-modal" class="modal">
+        <div class="modal-box">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="font-size:16px;">⚡ Hardware Control Center</h3>
+                <button class="circle-btn" style="width:30px;height:30px;" onclick="closeModal('hardware-modal')">✕</button>
             </div>
+            <div class="theme-grid">
+                <button class="theme-btn" onclick="toggleFlashlight()">🔦 Toggle Flashlight</button>
+                <button class="theme-btn" onclick="triggerVibration()">📳 Haptic Pulse</button>
+                <button class="theme-btn" onclick="checkBattery()">🔋 Battery Telemetry</button>
+                <button class="theme-btn" onclick="speakText('At your service, Commander Naimish.')">🔊 Voice Test</button>
+            </div>
+            <div id="hw-status" style="font-size:11.5px; color:var(--accent); font-family:'JetBrains Mono',monospace;">// J.A.R.V.I.S. hardware link ready.</div>
         </div>
     </div>
 
     <script>
-        // 1. 3D Scene Initialization
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 2.5, 9);
-        camera.lookAt(0, 0, 0);
+        let torchTrack = null;
+        let isTorchOn = false;
+        let activeFileName = "index.html";
+        
+        let chatSessions = JSON.parse(localStorage.getItem('jarvis_sessions') || "[]");
+        let activeChatId = localStorage.getItem('jarvis_active_id') || null;
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedKey = localStorage.getItem('jarvis_universal_key') || "";
+            const savedTheme = localStorage.getItem('jarvis_theme') || "silk";
+            const savedNotes = localStorage.getItem('jarvis_notes') || "";
+            
+            document.getElementById('api-key-input').value = savedKey;
+            document.getElementById('workspace-code').value = savedNotes;
+            setTheme(savedTheme);
+
+            document.getElementById('workspace-code').addEventListener('input', (e) => {
+                localStorage.setItem('jarvis_notes', e.target.value);
+            });
+
+            if (chatSessions.length === 0) {
+                startNewChat();
+            } else {
+                renderSidebarChats();
+                if (!activeChatId) activeChatId = chatSessions[0].id;
+                loadChat(activeChatId);
+            }
+        });
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('sidebar-overlay').classList.toggle('active');
+        }
+
+        function startNewChat() {
+            const newSession = {
+                id: 'chat_' + Date.now(),
+                title: 'New Jarvis Session',
+                messages: []
+            };
+            chatSessions.unshift(newSession);
+            activeChatId = newSession.id;
+            saveAndRenderChats();
+            goHome();
+            if(document.getElementById('sidebar').classList.contains('active')) toggleSidebar();
+        }
+
+        function switchChat(id) {
+            activeChatId = id;
+            localStorage.setItem('jarvis_active_id', id);
+            loadChat(id);
+            showChat();
+            toggleSidebar();
+        }
+
+        function renameChat(e, id) {
+            e.stopPropagation();
+            const session = chatSessions.find(s => s.id === id);
+            if (!session) return;
+            const newTitle = prompt("Rename chat thread:", session.title);
+            if (newTitle) {
+                session.title = newTitle.trim();
+                saveAndRenderChats();
+            }
+        }
+
+        function deleteChat(e, id) {
+            e.stopPropagation();
+            if (confirm("Delete this Jarvis session?")) {
+                chatSessions = chatSessions.filter(s => s.id !== id);
+                if (chatSessions.length === 0) startNewChat();
+                else {
+                    activeChatId = chatSessions[0].id;
+                    loadChat(activeChatId);
+                }
+                saveAndRenderChats();
+            }
+        }
+
+        function saveAndRenderChats() {
+            localStorage.setItem('jarvis_sessions', JSON.stringify(chatSessions));
+            localStorage.setItem('jarvis_active_id', activeChatId);
+            renderSidebarChats();
+        }
+
+        function renderSidebarChats() {
+            const list = document.getElementById('sidebar-chats-list');
+            list.innerHTML = chatSessions.map(s => `
+                <div class="chat-item ${s.id === activeChatId ? 'active' : ''}" onclick="switchChat('${s.id}')">
+                    <span class="chat-item-title">${s.title}</span>
+                    <div class="chat-actions">
+                        <button class="chat-action-btn" onclick="renameChat(event, '${s.id}')" title="Rename">✏️</button>
+                        <button class="chat-action-btn" onclick="deleteChat(event, '${s.id}')" title="Delete">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadChat(id) {
+            const session = chatSessions.find(s => s.id === id);
+            const chatBox = document.getElementById('chat-Area');
+            chatBox.innerHTML = "";
+            if (session && session.messages.length > 0) {
+                session.messages.forEach(m => appendBubble(m.role, m.content, false));
+            } else {
+                appendBubble('agent', "🤖 **J.A.R.V.I.S. x A.E.G.I.S. online.**\nAt your service, Commander Naimish. Systems nominal. Ask anything or attach code files.", false);
+            }
+        }
+
+        function setTheme(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
+            localStorage.setItem('jarvis_theme', themeName);
+        }
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function saveCredentials() {
+            const k = document.getElementById('api-key-input').value.trim();
+            localStorage.setItem('jarvis_universal_key', k);
+            closeModal('security-modal');
+        }
+
+        function goHome() {
+            document.getElementById('bento-dashboard').style.display = 'grid';
+            document.getElementById('chat-Area').classList.remove('active');
+        }
+
+        function showChat() {
+            document.getElementById('bento-dashboard').style.display = 'none';
+            document.getElementById('chat-Area').classList.add('active');
+        }
+
+        function launchCoPilot(mode) {
+            showChat();
+            if (mode === 'affairs') {
+                document.getElementById('prompt-input').value = "Give me a high-speed global tech & AI intelligence briefing for today.";
+                executeJarvis();
+            }
+        }
+
+        async function toggleFlashlight() {
+            const pill = document.getElementById('light-pill');
+            const status = document.getElementById('hw-status');
+            try {
+                if (!isTorchOn) {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                    torchTrack = stream.getVideoTracks()[0];
+                    await torchTrack.applyConstraints({ advanced: [{ torch: true }] });
+                    isTorchOn = true;
+                    if (pill) { pill.innerHTML = "🔦 Light Off"; pill.classList.add('active'); }
+                    if (status) status.innerText = "// Flashlight: ON";
+                } else {
+                    if (torchTrack) { torchTrack.stop(); torchTrack = null; }
+                    isTorchOn = false;
+                    if (pill) { pill.innerHTML = "🔦 Light On"; pill.classList.remove('active'); }
+                    if (status) status.innerText = "// Flashlight: OFF";
+                }
+            } catch (e) {
+                if (status) status.innerText = "// Torch requires camera permission.";
+                alert("Flashlight toggled.");
+            }
+        }
+
+        function triggerVibration() { if (navigator.vibrate) navigator.vibrate([100, 50, 150]); }
+        async function checkBattery() {
+            if (navigator.getBattery) {
+                const bat = await navigator.getBattery();
+                document.getElementById('hw-status').innerText = `// Battery: ${Math.round(bat.level * 100)}%`;
+            }
+        }
+        function speakText(txt) {
+            if ('speechSynthesis' in window) {
+                const u = new SpeechSynthesisUtterance(txt);
+                u.rate = 1.0;
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        function toggleVoice() {
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const micBtn = document.getElementById('mic-trigger');
+            if (!SpeechRec) return alert("Speech recognition not supported.");
+            const rec = new SpeechRec();
+            rec.lang = 'en-US';
+            micBtn.classList.add('listening');
+            rec.onresult = (e) => {
+                document.getElementById('prompt-input').value = e.results[0][0].transcript;
+                micBtn.classList.remove('listening');
+                executeJarvis();
+            };
+            rec.onerror = () => micBtn.classList.remove('listening');
+            rec.onend = () => micBtn.classList.remove('listening');
+            rec.start();
+        }
+
+        async function handleFileUpload(e) {
+            const files = Array.from(e.target.files);
+            if (!files.length) return;
+            let combined = "";
+            for (const f of files) {
+                const text = await f.text();
+                activeFileName = f.name;
+                combined += `\n/* === FILE: ${f.name} === */\n${text}\n`;
+            }
+            document.getElementById('workspace-code').value = combined.trim();
+            document.getElementById('loaded-file-label').innerText = `Active File: ${files.map(f=>f.name).join(', ')}`;
+            localStorage.setItem('jarvis_notes', combined.trim());
+
+            showChat();
+            appendBubble('user', `📎 Loaded ${files.length} file(s) into memory: **${files.map(f=>f.name).join(', ')}**`);
+            appendBubble('agent', `Files locked into J.A.R.V.I.S. memory. What are your orders, Commander?`);
+        }
+
+        function downloadWorkspaceFile() {
+            const content = document.getElementById('workspace-code').value;
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = activeFileName || "index.html";
+            a.click(); URL.revokeObjectURL(url);
+        }
+
+        // FULL USER CONTEXT LOADED INTO JARVIS
+        async function executeJarvis() {
+            const input = document.getElementById('prompt-input');
+            const sendBtn = document.getElementById('send-btn');
+            const text = input.value.trim();
+            const apiKey = (localStorage.getItem('jarvis_universal_key') || "").trim();
+
+            if (!text) return;
+            if (!apiKey) { openModal('security-modal'); return; }
+
+            showChat();
+            appendBubble('user', text);
+            input.value = "";
+
+            const session = chatSessions.find(s => s.id === activeChatId);
+            if (session && session.title === 'New Jarvis Session') {
+                session.title = text.slice(0, 26) + (text.length > 26 ? '...' : '');
+                saveAndRenderChats();
+            }
+
+            const loadingBubble = appendBubble('agent', "⚡ *J.A.R.V.I.S. compiling personal context & running diagnostics...*");
+            sendBtn.disabled = true;
+
+            const userProfileContext = `
+[USER PROFILE & CONTEXT FOR J.A.R.V.I.S.]
+- User Name: Naimish (Age: 13, Born Dec 2, 6th-grade student).
+- Location: Azizganj, Shahjahanpur, India.
+- Family: Mom (uses her phone/email account), Father (LIC agent, interested in video promo scripts), Older brother Abhay, Brother in USA working as a software engineer.
+- Tech Stack & Skills: Learns & writes scripts in HTML, CSS, JavaScript, and Python. Builds web apps on Replit, CodeSandbox, Pydroid, and Vercel. Develops custom AI assistant web interfaces and integrates Gemini API.
+- Recent Projects: Cyber Defence (Vercel), Price Finder Pro (Replit), 3D WebGL developer portfolio (naimish-dev.vercel.app), Aegis AI Assistant (aegis-silk-phi.vercel.app).
+- Gaming & Tech: Plays Roblox (Blox Fruits, The Forge, 99 Nights in the Forest, Garden Horizons), Minecraft Java Edition on mobile (PojavLauncher/Mojo Launcher), Mobile Legends, Honor of Kings, Dead Rails. Researches gaming laptops (Lenovo LOQ, Acer Nitro V, ASUS TUF).
+- Content Creation: YouTube shorts, gaming edits, anime commentary (Jujutsu Kaisen - Gojo/Sukuna, Naruto). Uses CapCut, VN Video Editor, Alight Motion, and ElevenLabs (Adam voice model). Devices: Realme 5s & Vivo Y35.
+`;
+
+            const workspaceContext = document.getElementById('workspace-code').value.trim();
+            const fullPrompt = `${userProfileContext}
+
+[ACTIVE WORKSPACE FILE (${activeFileName})]
+\`\`\`
+${workspaceContext.slice(0, 10000) || "No code attached."}
+\`\`\`
+
+[COMMANDER NAIMISH'S INSTRUCTION]: ${text}`;
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
+                        generationConfig: { temperature: 0.3, maxOutputTokens: 3000 }
+                    }),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error?.message || `HTTP ${res.status}`);
+
+                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (reply) {
+                    loadingBubble.innerHTML = renderMarkdown(reply);
+                    attachCodeControls(loadingBubble);
+                    
+                    if (session) {
+                        session.messages.push({ role: 'user', content: text });
+                        session.messages.push({ role: 'agent', content: reply });
+                        saveAndRenderChats();
+                    }
+                } else {
+                    loadingBubble.innerHTML = `<span style="color:#f87171;">⚠️ Empty response from J.A.R.V.I.S. core.</span>`;
+                }
+            } catch (err) {
+                clearTimeout(timeoutId);
+                loadingBubble.innerHTML = `<span style="color:#f87171;">⚠️ [${err.name === 'AbortError' ? '15s Timeout Unstuck' : 'Error'}]: ${err.message}</span>`;
+            } finally {
+                sendBtn.disabled = false;
+                const stage = document.getElementById('main-stage');
+                stage.scrollTop = stage.scrollHeight;
+            }
+        }
+
+        function appendBubble(role, content, save = true) {
+            const chatBox = document.getElementById('chat-Area');
+            const div = document.createElement('div');
+            div.className = `msg ${role}`;
+            div.innerHTML = renderMarkdown(content);
+            if (role === 'agent' && content.includes('```')) attachCodeControls(div);
+            chatBox.appendChild(div);
+            const stage = document.getElementById('main-stage');
+            stage.scrollTop = stage.scrollHeight;
+
+            if (save && activeChatId) {
+                const session = chatSessions.find(s => s.id === activeChatId);
+                if (session) {
+                    session.messages.push({ role, content });
+                    saveAndRenderChats();
+                }
+            }
+            return div;
+        }
+
+        function renderMarkdown(txt) {
+            return txt
+                .replace(/```([a-zA-Z]*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+                .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function attachCodeControls(bubble) {
+            bubble.querySelectorAll('pre').forEach(pre => {
+                if (pre.querySelector('.code-btn-bar')) return;
+                const bar = document.createElement('div');
+                bar.className = 'code-btn-bar';
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'mini-code-btn';
+                copyBtn.innerText = 'COPY';
+                copyBtn.onclick = () => {
+                    navigator.clipboard.writeText(pre.querySelector('code').innerText);
+                    copyBtn.innerText = 'COPIED ✓';
+                    setTimeout(() => copyBtn.innerText = 'COPY', 2000);
+                };
+
+                const applyBtn = document.createElement('button');
+                applyBtn.className = 'mini-code-btn';
+                applyBtn.style.background = 'var(--accent)';
+                applyBtn.style.color = '#000';
+                applyBtn.innerText = '⚡ APPLY TO FILE';
+                applyBtn.onclick = () => {
+                    const code = pre.querySelector('code').innerText;
+                    document.getElementById('workspace-code').value = code;
+                    localStorage.setItem('jarvis_notes', code);
+                    openModal('notes-modal');
+                };
+
+                bar.appendChild(copyBtn);
+                bar.appendChild(applyBtn);
+                pre.appendChild(bar);
+            });
+        }
+    </script>
+</body>
+</html>
