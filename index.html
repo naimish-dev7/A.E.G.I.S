@@ -1,31 +1,31 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="silk">
+<html lang="en" data-theme="serious">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.A.R.V.I.S. x A.E.G.I.S. // SUPREME NEURAL OS</title>
+    <title>AEGIS // NEURAL CORE OS</title>
     
-    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@500,700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="[https://api.fontshare.com/v2/css?f](https://api.fontshare.com/v2/css?f)[]=clash-display@600,700&f[]=satoshi@500,700&display=swap" rel="stylesheet">
+    <link href="[https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap](https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap)" rel="stylesheet">
 
     <style>
-        /* === 5 STYLE MODES / THEMES === */
+        /* === 5 THEME MODES === */
         :root[data-theme="silk"] {
             --bg: #030305; --card: #0d0e12; --border: rgba(255, 255, 255, 0.08);
-            --accent: #00f0ff; --accent-grad: linear-gradient(135deg, #00f0ff, #7000ff);
+            --accent: #c084fc; --accent-grad: linear-gradient(135deg, #a855f7, #ec4899);
             --text: #f8fafc; --subtext: #8e95a5; --pill-bg: #111217; --sidebar-bg: #07080a;
         }
-        :root[data-theme="gemini"] {
+        :root[data-theme="gemini"] { /* 3D Planet Theme */
             --bg: #0b0f19; --card: rgba(23, 31, 50, 0.75); --border: rgba(96, 165, 250, 0.22);
             --accent: #60a5fa; --accent-grad: linear-gradient(135deg, #4285f4, #9b72cb, #d96570);
             --text: #f0f4f8; --subtext: #94a3b8; --pill-bg: rgba(30, 41, 69, 0.8); --sidebar-bg: #070a12;
         }
-        :root[data-theme="chatgpt"] {
-            --bg: #0d0d0d; --card: #171717; --border: rgba(255, 255, 255, 0.1);
-            --accent: #10a37f; --accent-grad: linear-gradient(135deg, #10a37f, #0d8a6a);
-            --text: #ececec; --subtext: #9b9b9b; --pill-bg: #212121; --sidebar-bg: #111111;
+        :root[data-theme="serious"] { /* Reference UI Light Theme */
+            --bg: #ffffff; --card: #f8f9fa; --border: #e0e0e0;
+            --accent: #0b57d0; --accent-grad: linear-gradient(135deg, #0b57d0, #0842a0);
+            --text: #1f1f1f; --subtext: #444746; --pill-bg: #e8eaed; --sidebar-bg: #f0f4f9;
         }
-        :root[data-theme="blackhole"] {
+        :root[data-theme="blackhole"] { /* 3D Blackhole Theme */
             --bg: #000000; --card: rgba(12, 8, 4, 0.78); --border: rgba(249, 115, 22, 0.28);
             --accent: #f97316; --accent-grad: linear-gradient(135deg, #f97316, #eab308, #dc2626);
             --text: #fff7ed; --subtext: #a8a29e; --pill-bg: rgba(24, 15, 8, 0.85); --sidebar-bg: #030201;
@@ -37,26 +37,57 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Satoshi', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; position: relative; transition: background 0.3s ease; }
+        body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; position: relative; transition: background 0.3s ease, color 0.3s ease; }
 
-        /* === ARC REACTOR SINGULARITY ENGINE === */
+        /* === 3D VISUAL ENGINE === */
         .singularity-bg {
             position: fixed; top: 38%; left: 50%; transform: translate(-50%, -50%);
             width: 320px; height: 320px; border-radius: 50%; pointer-events: none; z-index: 0;
             opacity: 0.25; transition: opacity 0.5s ease;
+            perspective: 800px; transform-style: preserve-3d;
         }
-        :root[data-theme="blackhole"] .singularity-bg { opacity: 0.65; }
-
-        .accretion-disk {
-            position: absolute; inset: -30px; border-radius: 50%;
-            background: conic-gradient(from 0deg, transparent, var(--accent), #fff, var(--accent), transparent);
-            filter: blur(28px); animation: spinHole 9s linear infinite;
-        }
-        .event-horizon {
+        .visual-core {
             position: absolute; inset: 35px; border-radius: 50%; background: #000;
             box-shadow: inset 0 0 35px var(--accent), 0 0 40px var(--accent);
+            transition: all 0.5s ease;
         }
-        @keyframes spinHole { 100% { transform: rotate(360deg); } }
+        .visual-ring {
+            position: absolute; inset: -30px; border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent, var(--accent), #fff, var(--accent), transparent);
+            filter: blur(28px); animation: spinRing 9s linear infinite;
+            transition: all 0.5s ease;
+        }
+        @keyframes spinRing { 100% { transform: rotate(360deg); } }
+
+        /* THEME 2: 3D PLANET (Gemini Aura) */
+        :root[data-theme="gemini"] .singularity-bg { opacity: 0.4; perspective: 1000px; }
+        :root[data-theme="gemini"] .visual-ring { opacity: 0; }
+        :root[data-theme="gemini"] .visual-core {
+            inset: 15px;
+            background: radial-gradient(circle at 30% 30%, #60a5fa, #1e3a8a 60%, #020617 90%);
+            box-shadow: inset -20px -20px 40px rgba(0,0,0,0.8), 0 0 50px rgba(96, 165, 250, 0.4);
+            animation: floatPlanet 12s ease-in-out infinite alternate;
+        }
+        @keyframes floatPlanet { 0% { transform: translateY(-10px) scale(1); } 100% { transform: translateY(10px) scale(1.02); } }
+
+        /* THEME 3: SERIOUS / REFERENCE UI LIGHT */
+        :root[data-theme="serious"] .singularity-bg { display: none; opacity: 0; }
+        :root[data-theme="serious"] .bento-card { box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeeee; }
+        :root[data-theme="serious"] .bottom-dock { background: linear-gradient(to top, #ffffff 85%, transparent); border-top: 1px solid #f0f0f0; }
+
+        /* THEME 4: 3D BLACKHOLE */
+        :root[data-theme="blackhole"] .singularity-bg { opacity: 0.8; }
+        :root[data-theme="blackhole"] .visual-ring {
+            transform: rotateX(75deg) rotateY(15deg);
+            filter: blur(12px); border: 2px solid rgba(249, 115, 22, 0.5);
+            box-shadow: 0 0 60px var(--accent), inset 0 0 60px var(--accent);
+            animation: spinHole3D 5s linear infinite;
+        }
+        :root[data-theme="blackhole"] .visual-core {
+            background: #000; box-shadow: inset 0 0 30px #000, 0 0 40px var(--accent);
+            transform: translateZ(30px);
+        }
+        @keyframes spinHole3D { 0% { transform: rotateX(75deg) rotateY(15deg) rotateZ(0deg); } 100% { transform: rotateX(75deg) rotateY(15deg) rotateZ(360deg); } }
 
         /* === TOP HEADER === */
         .top-header {
@@ -71,15 +102,12 @@
             align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: 0.2s;
         }
         .circle-btn:active { transform: scale(0.92); border-color: var(--accent); }
-        .mic-btn {
-            border-color: rgba(0, 240, 255, 0.4);
-            background: radial-gradient(circle, rgba(0,240,255,0.2) 0%, rgba(17,18,23,0.9) 100%);
-        }
+        .mic-btn { border-color: var(--accent); background: var(--pill-bg); }
         .mic-btn.listening { animation: pulseMic 1.2s infinite; border-color: #ef4444; }
         @keyframes pulseMic { 0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); } 50% { box-shadow: 0 0 0 10px rgba(239,68,68,0); } }
 
         .brand-logo {
-            font-family: 'Clash Display', sans-serif; font-size: 18px; font-weight: 700;
+            font-family: 'Clash Display', sans-serif; font-size: 19px; font-weight: 700;
             letter-spacing: 1.5px; background: var(--accent-grad);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
@@ -108,11 +136,11 @@
         
         .sidebar-chats { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
         .chat-item {
-            padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.02);
-            border: 1px solid transparent; color: var(--subtext); font-size: 12px; display: flex;
+            padding: 10px 12px; border-radius: 12px; background: rgba(128,128,128,0.05);
+            border: 1px solid transparent; color: var(--subtext); font-size: 13px; display: flex;
             justify-content: space-between; align-items: center; cursor: pointer; transition: 0.15s;
         }
-        .chat-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+        .chat-item:hover { background: rgba(128,128,128,0.1); color: var(--text); }
         .chat-item.active { background: var(--card); border-color: var(--border); color: var(--text); font-weight: 600; }
         
         .chat-item-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -149,10 +177,10 @@
         .msg.user { background: var(--accent-grad); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 500; }
         .msg.agent { background: var(--card); border: 1px solid var(--border); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; backdrop-filter: blur(20px); }
         
-        .msg.agent pre { background: #050608; padding: 34px 12px 12px 12px; border-radius: 12px; margin: 10px 0; overflow-x: auto; border: 1px solid var(--border); position: relative; }
-        .msg.agent code { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 11.5px; }
+        .msg.agent pre { background: #050608; padding: 34px 12px 12px 12px; border-radius: 12px; margin: 10px 0; overflow-x: auto; border: 1px solid var(--border); position: relative; color: #fff; }
+        .msg.agent code { font-family: 'JetBrains Mono', monospace; color: #60a5fa; font-size: 11.5px; }
         .code-btn-bar { position: absolute; top: 6px; right: 6px; display: flex; gap: 6px; }
-        .mini-code-btn { background: var(--accent); color: #000; border: none; padding: 3px 8px; border-radius: 6px; font-size: 9px; font-weight: 800; cursor: pointer; font-family: 'JetBrains Mono', monospace; }
+        .mini-code-btn { background: #3b82f6; color: #fff; border: none; padding: 3px 8px; border-radius: 6px; font-size: 9px; font-weight: 800; cursor: pointer; font-family: 'JetBrains Mono', monospace; }
 
         /* === BOTTOM DOCK === */
         .bottom-dock {
@@ -175,7 +203,7 @@
         .prompt-capsule {
             display: flex; align-items: center; gap: 10px; background: var(--pill-bg);
             border: 1px solid var(--border); border-radius: 100px; padding: 6px 8px 6px 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
         .clip-btn { background: none; border: none; color: var(--accent); font-size: 18px; cursor: pointer; display: flex; align-items: center; }
         .capsule-input { flex: 1; background: transparent; border: none; color: var(--text); font-size: 13px; outline: none; }
@@ -199,7 +227,7 @@
 
         .vault-input, .workspace-area {
             width: 100%; background: #05060a; border: 1px solid var(--border); border-radius: 14px;
-            padding: 12px; color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none;
+            padding: 12px; color: #f8fafc; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none;
         }
         .workspace-area { height: 200px; resize: none; color: #34d399; }
         .primary-btn { background: var(--accent-grad); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 12px; cursor: pointer; text-align: center; }
@@ -207,10 +235,10 @@
 </head>
 <body>
 
-    <!-- ARC REACTOR SINGULARITY ENGINE -->
+    <!-- 3D VISUAL ENGINE -->
     <div class="singularity-bg">
-        <div class="accretion-disk"></div>
-        <div class="event-horizon"></div>
+        <div class="visual-ring"></div>
+        <div class="visual-core"></div>
     </div>
 
     <!-- SIDEBAR DRAWER -->
@@ -230,7 +258,7 @@
     <div class="top-header">
         <div class="header-left">
             <button class="circle-btn" onclick="toggleSidebar()" title="Open Chat History">☰</button>
-            <div class="brand-logo" onclick="goHome()" style="cursor:pointer;">J.A.R.V.I.S. x A.E.G.I.S.</div>
+            <div class="brand-logo" onclick="goHome()" style="cursor:pointer;">AEGIS</div>
         </div>
         <button class="circle-btn mic-btn" id="mic-trigger" onclick="toggleVoice()" title="Voice Co-Pilot">🎙️</button>
     </div>
@@ -273,7 +301,7 @@
 
     <!-- BOTTOM DOCK -->
     <div class="bottom-dock">
-        <div class="skills-header">CONNECTED SKILLS & APPS</div>
+        <div class="skills-header">WORKSPACE 🤝💻</div>
         <div class="skills-pills">
             <div class="pill" onclick="goHome()">🏠 Home Hub</div>
             <div class="pill" onclick="openModal('notes-modal')">📝 Notes & Code</div>
@@ -283,8 +311,8 @@
 
         <div class="prompt-capsule">
             <button class="clip-btn" onclick="document.getElementById('file-uploader').click()" title="Attach Files">📎</button>
-            <input type="text" id="prompt-input" class="capsule-input" placeholder="Ask J.A.R.V.I.S. or command Aegis..." onkeydown="if(event.key==='Enter') executeJarvis()">
-            <button class="up-btn" id="send-btn" onclick="executeJarvis()">↑</button>
+            <input type="text" id="prompt-input" class="capsule-input" placeholder="Ask AEGIS..." onkeydown="if(event.key==='Enter') executeAegis()">
+            <button class="up-btn" id="send-btn" onclick="executeAegis()">↑</button>
         </div>
     </div>
 
@@ -292,19 +320,19 @@
     <div id="security-modal" class="modal">
         <div class="modal-box">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3 style="font-size:16px;">🔒 Settings & 5 Themes</h3>
+                <h3 style="font-size:16px; color:var(--text);">🔒 Settings & 5 Themes</h3>
                 <button class="circle-btn" style="width:30px;height:30px;" onclick="closeModal('security-modal')">✕</button>
             </div>
             <div style="font-size:11px; color:var(--subtext);">SELECT OS INTERFACE THEME:</div>
             <div class="theme-grid">
                 <button class="theme-btn" onclick="setTheme('silk')">🔵 Jarvis Arc</button>
-                <button class="theme-btn" onclick="setTheme('gemini')">🔵 Gemini Aura</button>
-                <button class="theme-btn" onclick="setTheme('chatgpt')">🟢 ChatGPT Obsidian</button>
-                <button class="theme-btn" onclick="setTheme('blackhole')">🟠 Event Horizon</button>
+                <button class="theme-btn" onclick="setTheme('gemini')">🌍 3D Planet Aura</button>
+                <button class="theme-btn" onclick="setTheme('serious')">📱 Light Serious UI</button>
+                <button class="theme-btn" onclick="setTheme('blackhole')">🌌 3D Blackhole</button>
                 <button class="theme-btn" onclick="setTheme('acid')" style="grid-column: span 2;">🟢 Cyber Acid</button>
             </div>
-            <div style="font-size:11px; color:var(--subtext); margin-top:4px;">UNIVERSAL GEMINI API KEY VAULT:</div>
-            <input type="password" id="api-key-input" class="vault-input" placeholder="Paste Gemini API Key here...">
+            <div style="font-size:11px; color:var(--subtext); margin-top:4px;">GOOGLE AI STUDIO API KEY:</div>
+            <input type="password" id="api-key-input" class="vault-input" placeholder="Paste Gemini API Key from Google AI Studio...">
             <button class="primary-btn" onclick="saveCredentials()">SAVE CREDENTIALS & APPLY</button>
         </div>
     </div>
@@ -313,14 +341,14 @@
     <div id="notes-modal" class="modal">
         <div class="modal-box">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3 style="font-size:16px;">📝 Code Workspace & Notes</h3>
+                <h3 style="font-size:16px; color:var(--text);">📝 Code Workspace</h3>
                 <button class="circle-btn" style="width:30px;height:30px;" onclick="closeModal('notes-modal')">✕</button>
             </div>
             <div style="font-size:11px; color:var(--subtext);" id="loaded-file-label">Active File: index.html</div>
-            <textarea id="workspace-code" class="workspace-area" placeholder="Paste code, write notes, or load files... J.A.R.V.I.S. reads this automatically!"></textarea>
+            <textarea id="workspace-code" class="workspace-area" placeholder="Paste code, write notes, or load files... AEGIS reads this automatically!"></textarea>
             <div style="display:flex; gap:8px;">
-                <button class="primary-btn" style="flex:1;" onclick="downloadWorkspaceFile()">💾 DOWNLOAD / SAVE</button>
-                <button class="primary-btn" style="flex:1; background:#27273a;" onclick="document.getElementById('file-uploader').click()">📂 LOAD FILE</button>
+                <button class="primary-btn" style="flex:1;" onclick="downloadWorkspaceFile()">💾 SAVE</button>
+                <button class="primary-btn" style="flex:1; background:#0b57d0;" onclick="document.getElementById('file-uploader').click()">📂 LOAD</button>
             </div>
         </div>
     </div>
@@ -329,16 +357,16 @@
     <div id="hardware-modal" class="modal">
         <div class="modal-box">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3 style="font-size:16px;">⚡ Hardware Control Center</h3>
+                <h3 style="font-size:16px; color:var(--text);">⚡ Hardware Control</h3>
                 <button class="circle-btn" style="width:30px;height:30px;" onclick="closeModal('hardware-modal')">✕</button>
             </div>
             <div class="theme-grid">
-                <button class="theme-btn" onclick="toggleFlashlight()">🔦 Toggle Flashlight</button>
+                <button class="theme-btn" onclick="toggleFlashlight()">🔦 Flashlight</button>
                 <button class="theme-btn" onclick="triggerVibration()">📳 Haptic Pulse</button>
-                <button class="theme-btn" onclick="checkBattery()">🔋 Battery Telemetry</button>
+                <button class="theme-btn" onclick="checkBattery()">🔋 Battery</button>
                 <button class="theme-btn" onclick="speakText('At your service, Commander Naimish.')">🔊 Voice Test</button>
             </div>
-            <div id="hw-status" style="font-size:11.5px; color:var(--accent); font-family:'JetBrains Mono',monospace;">// J.A.R.V.I.S. hardware link ready.</div>
+            <div id="hw-status" style="font-size:11.5px; color:var(--accent); font-family:'JetBrains Mono',monospace;">// AEGIS hardware link ready.</div>
         </div>
     </div>
 
@@ -347,20 +375,20 @@
         let isTorchOn = false;
         let activeFileName = "index.html";
         
-        let chatSessions = JSON.parse(localStorage.getItem('jarvis_sessions') || "[]");
-        let activeChatId = localStorage.getItem('jarvis_active_id') || null;
+        let chatSessions = JSON.parse(localStorage.getItem('aegis_sessions') || "[]");
+        let activeChatId = localStorage.getItem('aegis_active_id') || null;
 
         window.addEventListener('DOMContentLoaded', () => {
-            const savedKey = localStorage.getItem('jarvis_universal_key') || "";
-            const savedTheme = localStorage.getItem('jarvis_theme') || "silk";
-            const savedNotes = localStorage.getItem('jarvis_notes') || "";
+            const savedKey = localStorage.getItem('aegis_universal_key') || "";
+            const savedTheme = localStorage.getItem('aegis_theme') || "serious";
+            const savedNotes = localStorage.getItem('aegis_notes') || "";
             
             document.getElementById('api-key-input').value = savedKey;
             document.getElementById('workspace-code').value = savedNotes;
             setTheme(savedTheme);
 
             document.getElementById('workspace-code').addEventListener('input', (e) => {
-                localStorage.setItem('jarvis_notes', e.target.value);
+                localStorage.setItem('aegis_notes', e.target.value);
             });
 
             if (chatSessions.length === 0) {
@@ -380,7 +408,7 @@
         function startNewChat() {
             const newSession = {
                 id: 'chat_' + Date.now(),
-                title: 'New Jarvis Session',
+                title: 'AEGIS',
                 messages: []
             };
             chatSessions.unshift(newSession);
@@ -392,7 +420,7 @@
 
         function switchChat(id) {
             activeChatId = id;
-            localStorage.setItem('jarvis_active_id', id);
+            localStorage.setItem('aegis_active_id', id);
             loadChat(id);
             showChat();
             toggleSidebar();
@@ -411,7 +439,7 @@
 
         function deleteChat(e, id) {
             e.stopPropagation();
-            if (confirm("Delete this Jarvis session?")) {
+            if (confirm("Delete this session?")) {
                 chatSessions = chatSessions.filter(s => s.id !== id);
                 if (chatSessions.length === 0) startNewChat();
                 else {
@@ -423,8 +451,8 @@
         }
 
         function saveAndRenderChats() {
-            localStorage.setItem('jarvis_sessions', JSON.stringify(chatSessions));
-            localStorage.setItem('jarvis_active_id', activeChatId);
+            localStorage.setItem('aegis_sessions', JSON.stringify(chatSessions));
+            localStorage.setItem('aegis_active_id', activeChatId);
             renderSidebarChats();
         }
 
@@ -448,20 +476,20 @@
             if (session && session.messages.length > 0) {
                 session.messages.forEach(m => appendBubble(m.role, m.content, false));
             } else {
-                appendBubble('agent', "🤖 **J.A.R.V.I.S. x A.E.G.I.S. online.**\nAt your service, Commander Naimish. Systems nominal. Ask anything or attach code files.", false);
+                appendBubble('agent', "🛡️ **AEGIS Neural Core Online.**\nSystems nominal. Connected to Google AI Studio Gemini API. Awaiting orders.", false);
             }
         }
 
         function setTheme(themeName) {
             document.documentElement.setAttribute('data-theme', themeName);
-            localStorage.setItem('jarvis_theme', themeName);
+            localStorage.setItem('aegis_theme', themeName);
         }
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
         function saveCredentials() {
             const k = document.getElementById('api-key-input').value.trim();
-            localStorage.setItem('jarvis_universal_key', k);
+            localStorage.setItem('aegis_universal_key', k);
             closeModal('security-modal');
         }
 
@@ -479,7 +507,7 @@
             showChat();
             if (mode === 'affairs') {
                 document.getElementById('prompt-input').value = "Give me a high-speed global tech & AI intelligence briefing for today.";
-                executeJarvis();
+                executeAegis();
             }
         }
 
@@ -531,7 +559,7 @@
             rec.onresult = (e) => {
                 document.getElementById('prompt-input').value = e.results[0][0].transcript;
                 micBtn.classList.remove('listening');
-                executeJarvis();
+                executeAegis();
             };
             rec.onerror = () => micBtn.classList.remove('listening');
             rec.onend = () => micBtn.classList.remove('listening');
@@ -549,11 +577,11 @@
             }
             document.getElementById('workspace-code').value = combined.trim();
             document.getElementById('loaded-file-label').innerText = `Active File: ${files.map(f=>f.name).join(', ')}`;
-            localStorage.setItem('jarvis_notes', combined.trim());
+            localStorage.setItem('aegis_notes', combined.trim());
 
             showChat();
             appendBubble('user', `📎 Loaded ${files.length} file(s) into memory: **${files.map(f=>f.name).join(', ')}**`);
-            appendBubble('agent', `Files locked into J.A.R.V.I.S. memory. What are your orders, Commander?`);
+            appendBubble('agent', `Files loaded into AEGIS memory. Ready for code modifications.`);
         }
 
         function downloadWorkspaceFile() {
@@ -565,12 +593,11 @@
             a.click(); URL.revokeObjectURL(url);
         }
 
-        // FULL USER CONTEXT LOADED INTO JARVIS
-        async function executeJarvis() {
+        async function executeAegis() {
             const input = document.getElementById('prompt-input');
             const sendBtn = document.getElementById('send-btn');
             const text = input.value.trim();
-            const apiKey = (localStorage.getItem('jarvis_universal_key') || "").trim();
+            const apiKey = (localStorage.getItem('aegis_universal_key') || "").trim();
 
             if (!text) return;
             if (!apiKey) { openModal('security-modal'); return; }
@@ -580,40 +607,24 @@
             input.value = "";
 
             const session = chatSessions.find(s => s.id === activeChatId);
-            if (session && session.title === 'New Jarvis Session') {
+            if (session && session.title === 'AEGIS') {
                 session.title = text.slice(0, 26) + (text.length > 26 ? '...' : '');
                 saveAndRenderChats();
             }
 
-            const loadingBubble = appendBubble('agent', "⚡ *J.A.R.V.I.S. compiling personal context & running diagnostics...*");
+            const loadingBubble = appendBubble('agent', "⚡ *Processing...*");
             sendBtn.disabled = true;
 
-            const userProfileContext = `
-[USER PROFILE & CONTEXT FOR J.A.R.V.I.S.]
-- User Name: Naimish (Age: 13, Born Dec 2, 6th-grade student).
-- Location: Azizganj, Shahjahanpur, India.
-- Family: Mom (uses her phone/email account), Father (LIC agent, interested in video promo scripts), Older brother Abhay, Brother in USA working as a software engineer.
-- Tech Stack & Skills: Learns & writes scripts in HTML, CSS, JavaScript, and Python. Builds web apps on Replit, CodeSandbox, Pydroid, and Vercel. Develops custom AI assistant web interfaces and integrates Gemini API.
-- Recent Projects: Cyber Defence (Vercel), Price Finder Pro (Replit), 3D WebGL developer portfolio (naimish-dev.vercel.app), Aegis AI Assistant (aegis-silk-phi.vercel.app).
-- Gaming & Tech: Plays Roblox (Blox Fruits, The Forge, 99 Nights in the Forest, Garden Horizons), Minecraft Java Edition on mobile (PojavLauncher/Mojo Launcher), Mobile Legends, Honor of Kings, Dead Rails. Researches gaming laptops (Lenovo LOQ, Acer Nitro V, ASUS TUF).
-- Content Creation: YouTube shorts, gaming edits, anime commentary (Jujutsu Kaisen - Gojo/Sukuna, Naruto). Uses CapCut, VN Video Editor, Alight Motion, and ElevenLabs (Adam voice model). Devices: Realme 5s & Vivo Y35.
-`;
-
             const workspaceContext = document.getElementById('workspace-code').value.trim();
-            const fullPrompt = `${userProfileContext}
-
-[ACTIVE WORKSPACE FILE (${activeFileName})]
-\`\`\`
-${workspaceContext.slice(0, 10000) || "No code attached."}
-\`\`\`
-
-[COMMANDER NAIMISH'S INSTRUCTION]: ${text}`;
+            const fullPrompt = workspaceContext 
+                ? `You are AEGIS, an elite AI assistant. Active Code (${activeFileName}):\n\`\`\`\n${workspaceContext.slice(0, 10000)}\n\`\`\`\n\nCommand: ${text}`
+                : `You are AEGIS. Command: ${text}`;
 
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 15000);
 
             try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+                const res = await fetch(`[https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=$](https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=$){apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -638,11 +649,11 @@ ${workspaceContext.slice(0, 10000) || "No code attached."}
                         saveAndRenderChats();
                     }
                 } else {
-                    loadingBubble.innerHTML = `<span style="color:#f87171;">⚠️ Empty response from J.A.R.V.I.S. core.</span>`;
+                    loadingBubble.innerHTML = `<span style="color:#f87171;">⚠️ Empty response.</span>`;
                 }
             } catch (err) {
                 clearTimeout(timeoutId);
-                loadingBubble.innerHTML = `<span style="color:#f87171;">⚠️ [${err.name === 'AbortError' ? '15s Timeout Unstuck' : 'Error'}]: ${err.message}</span>`;
+                loadingBubble.innerHTML = `<span style="color:#f87171;">⚠️ [${err.name === 'AbortError' ? '15s Timeout' : 'API Error'}]: ${err.message}\nCheck your Google AI Studio API key.</span>`;
             } finally {
                 sendBtn.disabled = false;
                 const stage = document.getElementById('main-stage');
@@ -683,9 +694,11 @@ ${workspaceContext.slice(0, 10000) || "No code attached."}
             bubble.querySelectorAll('pre').forEach(pre => {
                 if (pre.querySelector('.code-btn-bar')) return;
                 const bar = document.createElement('div');
+                const copyBtn = document.createElement('button');
+                const applyBtn = document.createElement('button');
+
                 bar.className = 'code-btn-bar';
 
-                const copyBtn = document.createElement('button');
                 copyBtn.className = 'mini-code-btn';
                 copyBtn.innerText = 'COPY';
                 copyBtn.onclick = () => {
@@ -694,15 +707,14 @@ ${workspaceContext.slice(0, 10000) || "No code attached."}
                     setTimeout(() => copyBtn.innerText = 'COPY', 2000);
                 };
 
-                const applyBtn = document.createElement('button');
                 applyBtn.className = 'mini-code-btn';
-                applyBtn.style.background = 'var(--accent)';
-                applyBtn.style.color = '#000';
+                applyBtn.style.background = '#10b981';
+                applyBtn.style.color = '#fff';
                 applyBtn.innerText = '⚡ APPLY TO FILE';
                 applyBtn.onclick = () => {
                     const code = pre.querySelector('code').innerText;
                     document.getElementById('workspace-code').value = code;
-                    localStorage.setItem('jarvis_notes', code);
+                    localStorage.setItem('aegis_notes', code);
                     openModal('notes-modal');
                 };
 
